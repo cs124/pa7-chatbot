@@ -1,0 +1,57 @@
+#########################################################################################
+# TODO: Fill this template out in addition to the code implementation in chatbot.py!    #
+#                                                                                       #
+# Each "Creative" feature in the rubric has a section below.                            #
+# For every feature you chose to implement, replace the "NO" at the end of the relevant #
+# lines with "YES".                                                                     #
+#                                                                                       #
+# You will only receive credit for the features you mark as YES below!                  #
+#########################################################################################
+
+FEATURE - Identifying movies without quotation marks and correct capitalization (part 1): NO
+FEATURE - Identifying movies without quotation marks and correct capitalization (part 2): NO
+FEATURE - Alternate/foreign titles: NO
+FEATURE - Disambiguation (part 1): NO
+FEATURE - Fine-grained sentiment extraction: NO
+FEATURE - Spell-correcting fallback for find_movies_by_title: NO
+FEATURE - Extracting sentiment with multiple-movie input: NO
+FEATURE - Disambiguation (part 2): NO
+FEATURE - Disambiguation (part 3): NO
+FEATURE - Dialogue for spell-checking: NO
+FEATURE - Dialogue for disambiguation: NO
+FEATURE - Communicating sentiments and movies extracted to the user given multiple-movie input: NO
+FEATURE - Understanding references to things said previously: NO
+FEATURE - Responding to arbitrary input: NO
+FEATURE - Speaking very fluently: NO
+FEATURE - Identifying and responding to emotions: NO
+Did not implement any of the above features: NO
+
+#########################################################################################
+# Team Contributions                                                                    #
+#########################################################################################
+TODO: Please write a short description of what each team member contributed!
+
+
+#########################################################################################
+# Ethics Question                                                                  #
+#########################################################################################
+TODO: Please answer the following question:
+
+Humans are quick to anthropomorphize chatbots, like ELIZA. 
+In the 1960’s, users’ trust in ELIZA raised numerous concerns that humans would believe the system’s advice, 
+even if ELIZA did not actually know what it was talking about. Newer chatbots are built using neural networks, 
+like those you implemented in PA5. These neural networks are trained on enormous sets of data, from online 
+sources like Reddit and Twitter. These sources are interlaced with offensive text that are often reproduced 
+in chatbot responses. Furthermore, the newest advanced models, like GPT-3, have produced responses that appear 
+that they were written by a human.
+
+What are some possible ramifications of anthropomorphizing chatbot systems? Can you think of any ways that 
+engineers could ensure that users can easily distinguish the chatbot responses from those of a human?
+
+
+
+#########################################################################################
+# Optional: Feel free to include anything else that you want us to know about your      #
+# implementation!                                                                       #
+#########################################################################################
+(optional) If you have anything else you want to add, delete this and type it here!

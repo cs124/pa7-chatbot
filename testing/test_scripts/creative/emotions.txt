@@ -1,0 +1,4 @@
+I am sad.
+I am happy.
+I am angry.
+:quit

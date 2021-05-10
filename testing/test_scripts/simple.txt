@@ -1,0 +1,4 @@
+I liked "Titanic"
+I didn't like "Ex Machina"
+Who are you?
+:quit
