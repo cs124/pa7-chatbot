@@ -2,7 +2,7 @@
 
 **Late days CANNOT be used on this assignment. Please submit early and often to avoid last minute submission issues!**
 
-**You must work in groups of 2-4 members (To work in a group of size 2, you must get special permission from the staff). All submissions will be graded according to the same criteria, regardless of group size.**
+**You must work in groups of 3-4 members (To work in a group of size 2, you must get special permission from the staff). All submissions will be graded according to the same criteria, regardless of group size.**
 
 In this assignment you will build a chatbot somewhat like the chatbot ELIZA that you saw in the lecture. You will work on a simpler, single-agent version first, and then choose from a set of advanced features to get more points. **A score of 95 points is considered full credit, and you can get up to 10 additional points in extra credit.**
 
