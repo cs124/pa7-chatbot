@@ -328,7 +328,7 @@ def test_recommend():
     user_ratings = np.zeros(9125)
     user_ratings[[8514, 7953, 6979, 7890]] = 1
     user_ratings[[7369, 8726]] = -1
-    recommendations = chatbot.recommend(user_ratings, chatbot.load_ratings, k=5)
+    recommendations = chatbot.recommend(user_ratings, chatbot.ratings, k=5)
 
     test_cases = [
         (small_recommendations, [2, 3]),
