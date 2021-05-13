@@ -72,7 +72,7 @@ The bot gets confused because it expects quotation marks.
 The bot understands everything, so it echoes your sentiment. It’s a bit repetitive, though.
 
     > I was completely amazed at how "Rush Hour 3" was pretty much the most ridiculous thing I've seen in my entire life.
-This sentence was too hard for the starter bot. That’s ok.
+This sentence was too hard for the starter bot. That’s okay!
 
     moviebot> I'm sorry, I'm not quite sure if you liked "Rush Hour 3". 
     Tell me more about "Rush Hour 3".
@@ -82,11 +82,11 @@ This sentence was too hard for the starter bot. That’s ok.
     > Oh, I also thought "The Little Mermaid" was fantastic!
     moviebot> You liked "The Little Mermaid". Thank you! Tell me about another movie you have seen.
     > I'm tired of typing about movies.    
-The bot gives a nice response to this! It’s ok for the chatbot to require 5 data points before giving a recommendation:
+The bot gives a nice response to this! It’s okay for the chatbot to require 5 data points before giving a recommendation:
 
     moviebot> I want to hear more about movies! Tell me about another movie you have seen.
     I didn't like "The Notebook" or "Avatar".
-The bot can’t handle this, but that’s ok.
+The bot can’t handle this, but that’s okay.
 
     moviebot> Please tell me about one movie at a time. Go ahead.
     I didn't like "The Notebook".
