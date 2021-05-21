@@ -209,9 +209,10 @@ If you add any additional files, create a deps/ folder and put your additional f
 To create a .zip file for submission:
 
     sh generate_submission.sh
-Upload the submission.zip file that shows up to Gradescope. This will zip up chatbot.py, rubric.txt and optionally, your deps folder and PorterStemmer.py if they exist in your assignment folder.
 
-Alternatively, if you don't submit a deps folder, you're also welcome to directly drag chatbot.py and rubric.txt (and optionally PorterStemmer.py) into Gradescope without zipping.
+Upload the submission.zip file that shows up to Gradescope. This will zip up chatbot.py, rubric.txt and optionally, your deps folder.
+
+Alternatively, if you don't submit a deps folder, you're also welcome to directly drag chatbot.py and rubric.txt into Gradescope without zipping. Note that if you used the Porter stemmer in porter_stemmer.py, you don't need to do anything special related to that. It will be accessible to your chatbot from inside the autograder.
 
 We are enabling group submission. After you submit the required files, you'll see "Add Group Member" in the top right of the Autograder Results page. Please add the group members you worked with (you may add up to 3). Note that only one group member needs to actually upload the submission to Gradescope.
 
