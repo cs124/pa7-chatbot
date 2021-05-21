@@ -72,7 +72,7 @@ The bot gets confused because it expects quotation marks.
 The bot understands everything, so it echoes your sentiment. It’s a bit repetitive, though.
 
     > I was completely amazed at how "Rush Hour 3" was pretty much the most ridiculous thing I've seen in my entire life.
-This sentence was too hard for the starter bot. That’s ok.
+This sentence was too hard for the starter bot. That’s okay!
 
     moviebot> I'm sorry, I'm not quite sure if you liked "Rush Hour 3". 
     Tell me more about "Rush Hour 3".
@@ -82,11 +82,11 @@ This sentence was too hard for the starter bot. That’s ok.
     > Oh, I also thought "The Little Mermaid" was fantastic!
     moviebot> You liked "The Little Mermaid". Thank you! Tell me about another movie you have seen.
     > I'm tired of typing about movies.    
-The bot gives a nice response to this! It’s ok for the chatbot to require 5 data points before giving a recommendation:
+The bot gives a nice response to this! It’s okay for the chatbot to require 5 data points before giving a recommendation:
 
     moviebot> I want to hear more about movies! Tell me about another movie you have seen.
     I didn't like "The Notebook" or "Avatar".
-The bot can’t handle this, but that’s ok.
+The bot can’t handle this, but that’s okay.
 
     moviebot> Please tell me about one movie at a time. Go ahead.
     I didn't like "The Notebook".
@@ -106,9 +106,13 @@ The REPL class calls the process method in the Chatbot class each time the user 
 We've decomposed some of the core logic for you. You will need to implement the following four methods:
 
 `extract_titles(preprocessed_input)`: given an input text, output a list of plausible movie titles that are mentioned in text, i.e. substrings for the bot to look up in the movie database. For starter mode, this function should simply output all substrings that were found between quotation marks.
+
 `find_movies_by_title(title)`: return a list of indices corresponding to titles in the movie database matching the given title. The year may or may not be included in title, and the function should handle the way many movies in the database have English articles (a, an, the) moved to the end. For example, find_movies_by_title("The American President") should return [10], where 10 is the index of "American President, The (1995)". If a year is not provided, a title may match multiple: find_movies_by_title("Titanic") should return [1359, 2716], corresponding to the 1997 and 1953 versions, whereas find_movies_by_title("Titanic (1997)") should return simply [1359].
+
 `extract_sentiment(preprocessed_input)`: extract the sentiment of text. For starter mode, return -1 if text has negative sentiment, 1 if positive sentiment, and 0 if no non-neutral sentiment detected.
+
 `recommend(user_ratings, ratings, k)`: Given the provided vector of the user's preferences and a matrix of ratings by other users, use collaborative filtering to compute and return a list of the k movie indices with the highest recommendation score that the user hasn't seen. For starter mode, you will implement and use item-item collaborative filtering, with cosine similarity and no rating normalization.
+
 `binarize(ratings, threshold)`: Binarizes the ratings matrix by replacing all entries above the threshold with 1 and all entries below the threshold with -1 (entries that are 0 should stay as 0). This function is called at the beginning of init and you will be working with a binarized ratings matrix for the rest of the assignment.
 
 These functions will be tested by the autograder, so make sure you implement them correctly! The starter code includes a sanity check script that runs some basic tests on these functions to help you debug them. We recommend you explore these and other function stubs provided in the starter code and call them in process as appropriate.
