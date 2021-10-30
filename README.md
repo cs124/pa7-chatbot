@@ -4,7 +4,7 @@
 
 **You must work in groups of 3-4 members (To work in a group of size 2, you must get special permission from the staff). All submissions will be graded according to the same criteria, regardless of group size.**
 
-In this assignment you will build a chatbot somewhat like the chatbot ELIZA that you saw in the lecture. You will work on a simpler, single-agent version first, and then choose from a set of advanced features to get more points. **A score of 95 points is considered full credit, and you can get up to 10 additional points in extra credit.**
+In this assignment you will build a chatbot somewhat like the chatbot ELIZA that you saw in the lecture. You will work on a simpler, single-agent version first, and then choose from a set of advanced features to get more points. **A score of 97 points is considered full credit (95 from chatbot functionality + 2 from ethics questions), and you can get up to 10 additional points in extra credit.**
 
 To get you started, we will guide you in the implementation of a chatbot that can recommend movies to the user – this will be referred to as the **starter** mode. After you have implemented the movie-recommender chatbot, you will switch to a **creative** mode and implement an interesting extension of the movie recommender, or something totally new. Be creative, and have fun!
 
