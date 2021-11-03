@@ -225,6 +225,20 @@ class Chatbot:
         pre-processed with preprocess()
         :returns: a numerical value for the sentiment of the text
         """
+
+        # what kind of negation handling
+        pos_count = 0
+        neg_count = 0
+        lmd = 1
+        for item in preprocessed_input:
+            if "pos" in self.sentiment[item]:
+                pos_count += 1
+            if "neg" in self.sentiment[item]:
+                neg_count += 1
+        if pos_count / neg_count > lmd:
+            return 1
+        elif pos_count / neg_count < lmd:
+            return -1
         return 0
 
     def extract_sentiment_for_movies(self, preprocessed_input):
