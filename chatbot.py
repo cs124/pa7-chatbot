@@ -3,9 +3,9 @@
 # Original Python code by Ignacio Cases (@cases)
 ######################################################################
 import util
+import re
 
 import numpy as np
-
 
 # noinspection PyMethodMayBeStatic
 class Chatbot:
@@ -14,7 +14,7 @@ class Chatbot:
     def __init__(self, creative=False):
         # The chatbot's default name is `moviebot`.
         # TODO: Give your chatbot a new name.
-        self.name = 'moviebot'
+        self.name = 'ELON'
 
         self.creative = creative
 
@@ -44,7 +44,7 @@ class Chatbot:
         # TODO: Write a short greeting message                                 #
         ########################################################################
 
-        greeting_message = "How can I help you?"
+        greeting_message = "What's up? How can I help you?"
 
         ########################################################################
         #                             END OF YOUR CODE                         #
@@ -59,7 +59,7 @@ class Chatbot:
         # TODO: Write a short farewell message                                 #
         ########################################################################
 
-        goodbye_message = "Have a nice day!"
+        goodbye_message = "Goodbye- FULL SEND!"
 
         ########################################################################
         #                          END OF YOUR CODE                            #
@@ -133,7 +133,6 @@ class Chatbot:
         ########################################################################
         #                             END OF YOUR CODE                         #
         ########################################################################
-
         return text
 
     def extract_titles(self, preprocessed_input):
@@ -158,8 +157,8 @@ class Chatbot:
         pre-processed with preprocess()
         :returns: list of movie titles that are potentially in the text
         """
-        return []
-
+        allMovies = re.findall('"([^"]*)"', preprocessed_input)
+        return allMovies
     def find_movies_by_title(self, title):
         """ Given a movie title, return a list of indices of matching movies.
 
