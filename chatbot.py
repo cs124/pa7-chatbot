@@ -4,6 +4,7 @@
 ######################################################################
 import util
 import re
+from nltk.tokenize import word_tokenize
 
 import numpy as np
 
@@ -159,6 +160,7 @@ class Chatbot:
         """
         allMovies = re.findall('"([^"]*)"', preprocessed_input)
         return allMovies
+        
     def find_movies_by_title(self, title):
         """ Given a movie title, return a list of indices of matching movies.
 
@@ -177,7 +179,27 @@ class Chatbot:
         :param title: a string containing a movie title
         :returns: a list of indices of matching movies
         """
-        return []
+
+        # GO TO OFFICE HOURS TO GET MORE SPECIFIC INSTRUCTIONS
+        # theory 1: Regex 
+        res = []
+        for i in range(len(self.titles)):
+            currTitle = self.titles[i][0]
+            if currTitle == title:
+                res.add(i)
+            else:
+                currWords = word_tokenize(currTitle)
+                currSet = set()
+                currSet.add(currWords[i] for i in range(0, len(currWords)))
+
+                titleWords = word_tokenize(title)
+                sameMovie = True
+                for word in titleWords:
+                    if word not in currSet:
+                        sameMovie = False
+                if sameMovie:
+                    res.add(i)
+        return res
 
     def extract_sentiment(self, preprocessed_input):
         """Extract a sentiment rating from a line of pre-processed text.
@@ -199,7 +221,20 @@ class Chatbot:
         pre-processed with preprocess()
         :returns: a numerical value for the sentiment of the text
         """
-        return 0
+        # Is this right way to do it
+        pos_count = 0
+        neg_count = 0
+        for item in preprocessed_input:
+            if "pos" in self.sentiment[item]:
+                pos_count += 1
+            if "neg" in self.sentiment[item]:
+                neg_count += 1
+        if pos_count > neg_count:
+            return 1
+        elif pos_count < neg_count:
+            return -1
+        else:
+            return 0
 
     def extract_sentiment_for_movies(self, preprocessed_input):
         """Creative Feature: Extracts the sentiments from a line of
@@ -326,7 +361,9 @@ class Chatbot:
         ########################################################################
         # TODO: Compute cosine similarity between the two vectors.             #
         ########################################################################
-        similarity = 0
+        similarity = np.dot(u,v)
+        normalizing_factor = np.linalg.norm(u) * np.linalg.norm(v)
+        similarity = np.divide(similarity, normalizing_factor)
         ########################################################################
         #                          END OF YOUR CODE                            #
         ########################################################################
@@ -370,7 +407,13 @@ class Chatbot:
 
         # Populate this list with k movie indices to recommend to the user.
         recommendations = []
+        for title_num in range(len(self.titles)):
+            similarity = self.similarity(user_ratings, ratings_matrix[title_num])
+            recommendations.append(())
+                # do something
+        
 
+        
         ########################################################################
         #                        END OF YOUR CODE                              #
         ########################################################################
