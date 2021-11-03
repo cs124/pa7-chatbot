@@ -3,8 +3,11 @@
 # Original Python code by Ignacio Cases (@cases)
 ######################################################################
 import util
-
+from collections import defaultdict
 import numpy as np
+from nltk.tokenize import word_tokenize
+
+import regex as re #changed
 
 
 # noinspection PyMethodMayBeStatic
@@ -138,11 +141,9 @@ class Chatbot:
 
     def extract_titles(self, preprocessed_input):
         """Extract potential movie titles from a line of pre-processed text.
-
         Given an input text which has been pre-processed with preprocess(),
         this method should return a list of movie titles that are potentially
         in the text.
-
         - If there are no movie titles in the text, return an empty list.
         - If there is exactly one movie title in the text, return a list
         containing just that one movie title.
@@ -178,8 +179,30 @@ class Chatbot:
         :param title: a string containing a movie title
         :returns: a list of indices of matching movies
         """
-        return []
+        res = []
+        titleYear = re.findall("(\([0-9]+\))", title)
+        title = re.sub( "(\([0-9]+\))", "", title)
+        titleWords = word_tokenize(title)
 
+        for i in range(len(self.titles)):
+            currTitle = self.titles[i][0]
+            if currTitle == title:
+                res.append(i) #changed
+            else:
+                currYear = re.findall("(\([0-9]+\))", currTitle)
+                currTitle = re.sub("(\([0-9]+\))", "", currTitle)
+                currWords = word_tokenize(currTitle)
+                currSet = set()
+                for word in currWords: #changed
+                    currSet.add(word)
+                sameMovie = True
+                for word in currSet: #check to see if your word is in theirs, but not vice versa
+                    if word != "," and word not in titleWords:
+                        sameMovie = False
+                if sameMovie:
+                    if titleYear == [] or currYear[0] == titleYear[0]:
+                        res.append(i) #changed
+        return res
     def extract_sentiment(self, preprocessed_input):
         """Extract a sentiment rating from a line of pre-processed text.
 
@@ -389,6 +412,14 @@ class Chatbot:
         your evaluators.
         """
         debug_info = 'debug info'
+        id1 = "An American in Paris (1951)"
+        id2 = "The Notebook (1220)"
+        id3 = "Titanic"
+        id4 = "Scream"
+        l = list([id1, id2, id3, id4])
+        for elem in l:
+            print(elem, self.find_movies_by_title(elem))
+
         return debug_info
 
     ############################################################################
@@ -413,3 +444,4 @@ if __name__ == '__main__':
     print('To run your chatbot in an interactive loop from the command line, '
           'run:')
     print('    python3 repl.py')
+
