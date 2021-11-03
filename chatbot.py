@@ -180,29 +180,31 @@ class Chatbot:
         :returns: a list of indices of matching movies
         """
         res = []
-        titleYear = re.findall("(\([0-9]+\))", title)
-        title = re.sub( "(\([0-9]+\))", "", title)
+        titleYear = re.findall("(\([0-9]+\))", title) 
+        title = re.sub( "(\([0-9]+\))", "", title) # filter out year from original title
         titleWords = word_tokenize(title)
 
         for i in range(len(self.titles)):
             currTitle = self.titles[i][0]
             if currTitle == title:
-                res.append(i) #changed
+                res.append(i)
             else:
                 currYear = re.findall("(\([0-9]+\))", currTitle)
                 currTitle = re.sub("(\([0-9]+\))", "", currTitle)
                 currWords = word_tokenize(currTitle)
                 currSet = set()
-                for word in currWords: #changed
+                for word in currWords: 
                     currSet.add(word)
                 sameMovie = True
-                for word in currSet: #check to see if your word is in theirs, but not vice versa
+                for word in currSet: # check to see if every word in currMovie is also in your title
                     if word != "," and word not in titleWords:
                         sameMovie = False
                 if sameMovie:
-                    if titleYear == [] or currYear[0] == titleYear[0]:
-                        res.append(i) #changed
+                    if titleYear == [] or currYear[0] == titleYear[0]: # if there is a year specified in title make sure it matches
+                        res.append(i) 
         return res
+
+        # test in debug — to test run python3 repl.py and input :debug on
     def extract_sentiment(self, preprocessed_input):
         """Extract a sentiment rating from a line of pre-processed text.
 
