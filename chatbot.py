@@ -183,7 +183,7 @@ class Chatbot:
         titleYear = re.findall("(\([0-9]+\))", title) 
         title = re.sub( "(\([0-9]+\))", "", title) # filter out year from original title
         titleWords = word_tokenize(title)
-#tokenize movie title, mamke sure every token in movie title input also in tokenized representation of movie
+        # tokenize movie title, mamke sure every token in movie title input also in tokenized representation of movie
         for i in range(len(self.titles)):
             currTitle = self.titles[i][0]
             if currTitle == title:
@@ -192,14 +192,14 @@ class Chatbot:
                 currYear = re.findall("(\([0-9]+\))", currTitle)
                 currTitle = re.sub("(\([0-9]+\))", "", currTitle)
                 currWords = word_tokenize(currTitle)
-                currSet = set()
-                for word in currWords: 
-                    currSet.add(word)
                 sameMovie = True
-                for word in currSet: # check to see if every word in currMovie is also in your title
+                for word in currWords: # check to see if every word in currMovie is also in your title
                     if word != "," and word not in titleWords:
                         sameMovie = False
-                if sameMovie:
+                for word in titleWords: # check to see if every word in your title is also in your movie
+                    if word != "," and word not in currWords:
+                        sameMovie = False
+                if sameMovie: # the vectorized words are subsets of each other
                     if titleYear == [] or currYear[0] == titleYear[0]: # if there is a year specified in title make sure it matches
                         res.append(i) 
         return res
@@ -462,13 +462,13 @@ class Chatbot:
 
         # test for find_movies_by_title
         debug_info = 'debug info'
-        # id1 = "An American in Paris (1951)"
-        # id2 = "The Notebook (1220)"
-        # id3 = "Titanic"
-        # id4 = "Scream"
-        # l = list([id1, id2, id3, id4])
-        # # for elem in l:
-        # #     print(elem, self.find_movies_by_title(elem))
+        id1 = "An American in Paris (1951)"
+        id2 = "The Notebook (1220)"
+        id3 = "Titanic"
+        id4 = "Scream"
+        l = list([id1, id2, id3, id4])
+        for elem in l:
+            print(elem, self.find_movies_by_title(elem))
 
         # test for extract_sentiment
         # l2 = ["I didn't really like \"Titanic (1997)\"", "I never liked \"Titanic (1997)\"", "I really enjoyed \"Titanic (1997)\"",
