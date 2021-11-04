@@ -7,7 +7,7 @@ from collections import defaultdict
 import numpy as np
 from nltk.tokenize import word_tokenize
 import regex as re #changed
-import porter_stemmer
+from porter_stemmer import PorterStemmer
 
 
 # noinspection PyMethodMayBeStatic
@@ -233,8 +233,8 @@ class Chatbot:
         lmd = 1
         preprocessed_input = word_tokenize(preprocessed_input)
         for item in preprocessed_input:
-            # p = porter_stemmer()
-            # stemmed_item = p.stem(item)
+            p = PorterStemmer()
+            stemmed_item = p.stem(item)
             # print(item)
             if item in self.sentiment:
                 # print(item)
@@ -469,16 +469,16 @@ class Chatbot:
         # id2 = "The Notebook (1220)"
         # id3 = "Titanic"
         # id4 = "Scream"
-        l = list([id1])
-        for elem in l:
-            print(elem, self.find_movies_by_title(elem))
+        # l = list([id1])
+        # for elem in l:
+        #     print(elem, self.find_movies_by_title(elem))
 
         # test for extract_sentiment
-        # l2 = ["I didn't really like \"Titanic (1997)\"", "I never liked \"Titanic (1997)\"", "I really enjoyed \"Titanic (1997)\"",
-        #         "I saw \"Titanic (1997)\".",  "\"Titanic (1997)\" started out terrible, but the ending was totally great and I loved it!",
-        #         "I loved \"10 Things I Hate About You\""]
-        # for elem in l2:
-        #     print(elem, self.extract_sentiment(elem))
+        l2 = ["I didn't really like \"Titanic (1997)\"", "I never liked \"Titanic (1997)\"", "I really enjoyed \"Titanic (1997)\"",
+                "I saw \"Titanic (1997)\".",  "\"Titanic (1997)\" started out terrible, but the ending was totally great and I loved it!",
+                "I loved \"10 Things I Hate About You\""]
+        for elem in l2:
+            print(elem, self.extract_sentiment(elem))
         
         return debug_info
 
