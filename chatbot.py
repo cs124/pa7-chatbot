@@ -227,15 +227,22 @@ class Chatbot:
         """
 
         # what kind of negation handling
+        # not working bc doesn't recognize words
         pos_count = 0
         neg_count = 0
         lmd = 1
+        preprocessed_input = word_tokenize(preprocessed_input)
         for item in preprocessed_input:
-            if "pos" in self.sentiment[item]:
-                pos_count += 1
-            if "neg" in self.sentiment[item]:
-                neg_count += 1
-        if pos_count / neg_count > lmd:
+            # print(item)
+            if item in self.sentiment:
+                print(item)
+                if "pos" in self.sentiment[item]:
+                    pos_count += 1
+                if "neg" in self.sentiment[item]:
+                    neg_count += 1
+        print(pos_count)
+        print(neg_count)
+        if neg_count == 0 or pos_count / neg_count > lmd:
             return 1
         elif pos_count / neg_count < lmd:
             return -1
@@ -433,9 +440,14 @@ class Chatbot:
         id3 = "Titanic"
         id4 = "Scream"
         l = list([id1, id2, id3, id4])
-        for elem in l:
-            print(elem, self.find_movies_by_title(elem))
+        # for elem in l:
+        #     print(elem, self.find_movies_by_title(elem))
 
+        l2 = ["I didn't really like \"Titanic (1997)\"", "I never liked \"Titanic (1997)\"", "I really enjoyed \"Titanic (1997)\"",
+                "I saw \"Titanic (1997)\".",  "\"Titanic (1997)\" started out terrible, but the ending was totally great and I loved it!",
+                "I loved \"10 Things I Hate About You\""]
+        for elem in l2:
+            print(elem, self.extract_sentiment(elem))
         return debug_info
 
     ############################################################################
