@@ -3,10 +3,11 @@
 # Original Python code by Ignacio Cases (@cases)
 ######################################################################
 import util
-import re
-from nltk.tokenize import word_tokenize
-
+from collections import defaultdict
 import numpy as np
+from nltk.tokenize import word_tokenize
+import regex as re #changed
+
 
 # noinspection PyMethodMayBeStatic
 class Chatbot:
@@ -15,7 +16,7 @@ class Chatbot:
     def __init__(self, creative=False):
         # The chatbot's default name is `moviebot`.
         # TODO: Give your chatbot a new name.
-        self.name = 'ELON'
+        self.name = 'moviebot'
 
         self.creative = creative
 
@@ -45,7 +46,7 @@ class Chatbot:
         # TODO: Write a short greeting message                                 #
         ########################################################################
 
-        greeting_message = "What's up? How can I help you?"
+        greeting_message = "How can I help you?"
 
         ########################################################################
         #                             END OF YOUR CODE                         #
@@ -60,7 +61,7 @@ class Chatbot:
         # TODO: Write a short farewell message                                 #
         ########################################################################
 
-        goodbye_message = "Goodbye- FULL SEND!"
+        goodbye_message = "Have a nice day!"
 
         ########################################################################
         #                          END OF YOUR CODE                            #
@@ -134,15 +135,14 @@ class Chatbot:
         ########################################################################
         #                             END OF YOUR CODE                         #
         ########################################################################
+
         return text
 
     def extract_titles(self, preprocessed_input):
         """Extract potential movie titles from a line of pre-processed text.
-
         Given an input text which has been pre-processed with preprocess(),
         this method should return a list of movie titles that are potentially
         in the text.
-
         - If there are no movie titles in the text, return an empty list.
         - If there is exactly one movie title in the text, return a list
         containing just that one movie title.
@@ -157,10 +157,10 @@ class Chatbot:
         :param preprocessed_input: a user-supplied line of text that has been
         pre-processed with preprocess()
         :returns: list of movie titles that are potentially in the text
-        """
+        """ 
         allMovies = re.findall('"([^"]*)"', preprocessed_input)
         return allMovies
-        
+
     def find_movies_by_title(self, title):
         """ Given a movie title, return a list of indices of matching movies.
 
@@ -179,26 +179,29 @@ class Chatbot:
         :param title: a string containing a movie title
         :returns: a list of indices of matching movies
         """
-
-        # GO TO OFFICE HOURS TO GET MORE SPECIFIC INSTRUCTIONS
-        # theory 1: Regex 
         res = []
+        titleYear = re.findall("(\([0-9]+\))", title) 
+        title = re.sub( "(\([0-9]+\))", "", title) # filter out year from original title
+        titleWords = word_tokenize(title)
+#tokenize movie title, mamke sure every token in movie title input also in tokenized representation of movie
         for i in range(len(self.titles)):
             currTitle = self.titles[i][0]
             if currTitle == title:
-                res.add(i)
+                res.append(i)
             else:
+                currYear = re.findall("(\([0-9]+\))", currTitle)
+                currTitle = re.sub("(\([0-9]+\))", "", currTitle)
                 currWords = word_tokenize(currTitle)
                 currSet = set()
-                currSet.add(currWords[i] for i in range(0, len(currWords)))
-
-                titleWords = word_tokenize(title)
+                for word in currWords: 
+                    currSet.add(word)
                 sameMovie = True
-                for word in titleWords:
-                    if word not in currSet:
+                for word in currSet: # check to see if every word in currMovie is also in your title
+                    if word != "," and word not in titleWords:
                         sameMovie = False
                 if sameMovie:
-                    res.add(i)
+                    if titleYear == [] or currYear[0] == titleYear[0]: # if there is a year specified in title make sure it matches
+                        res.append(i) 
         return res
 
     def extract_sentiment(self, preprocessed_input):
@@ -221,20 +224,28 @@ class Chatbot:
         pre-processed with preprocess()
         :returns: a numerical value for the sentiment of the text
         """
-        # Is this right way to do it
+
+        # what kind of negation handling
+        # not working bc doesn't recognize words
         pos_count = 0
         neg_count = 0
+        lmd = 1
+        preprocessed_input = word_tokenize(preprocessed_input)
         for item in preprocessed_input:
-            if "pos" in self.sentiment[item]:
-                pos_count += 1
-            if "neg" in self.sentiment[item]:
-                neg_count += 1
-        if pos_count > neg_count:
+            # print(item)
+            if item in self.sentiment:
+                print(item)
+                if "pos" in self.sentiment[item]:
+                    pos_count += 1
+                if "neg" in self.sentiment[item]:
+                    neg_count += 1
+        print(pos_count)
+        print(neg_count)
+        if neg_count == 0 or pos_count / neg_count > lmd:
             return 1
-        elif pos_count < neg_count:
+        elif pos_count / neg_count < lmd:
             return -1
-        else:
-            return 0
+        return 0
 
     def extract_sentiment_for_movies(self, preprocessed_input):
         """Creative Feature: Extracts the sentiments from a line of
@@ -341,7 +352,11 @@ class Chatbot:
 
         # The starter code returns a new matrix shaped like ratings but full of
         # zeros.
-        binarized_ratings = np.zeros_like(ratings)
+        binarized_ratings = np.where(ratings <= threshold, ratings, -1)
+        binarized_ratings = np.where(binarized_ratings > threshold, binarized_ratings, 1)
+
+
+        # binarized_ratings = np.zeros_like(ratings)
 
         ########################################################################
         #                        END OF YOUR CODE                              #
@@ -363,7 +378,10 @@ class Chatbot:
         ########################################################################
         similarity = np.dot(u,v)
         normalizing_factor = np.linalg.norm(u) * np.linalg.norm(v)
-        similarity = np.divide(similarity, normalizing_factor)
+        if normalizing_factor == 0:
+            similarity = 0
+        else:
+            similarity = np.divide(similarity, normalizing_factor)
         ########################################################################
         #                          END OF YOUR CODE                            #
         ########################################################################
@@ -390,6 +408,8 @@ class Chatbot:
 
         :returns: a list of k movie indices corresponding to movies in
         ratings_matrix, in descending order of recommendation.
+
+
         """
 
         ########################################################################
@@ -407,12 +427,21 @@ class Chatbot:
 
         # Populate this list with k movie indices to recommend to the user.
         recommendations = []
-        for title_num in range(len(self.titles)):
-            similarity = self.similarity(user_ratings, ratings_matrix[title_num])
-            recommendations.append(())
-                # do something
-        
+        movieScore = {}
+        for i in range(len(ratings_matrix)):
+            for j in range(len(ratings_matrix)):
+                if i != j:
+                    if i not in movieScore:
+                        movieScore[i] = 0
+                    movieScore[i] += self.similarity(ratings_matrix[i], ratings_matrix[j]) * user_ratings[j]
 
+        ratingsToMovie = []
+        for movie in movieScore:
+            if user_ratings[movie] == 0: #if the user has not watched the movie 
+                ratingsToMovie.append((movieScore[movie], movie))
+        ratingsToMovie = sorted(ratingsToMovie, reverse=True)
+        for idx in range(k):
+            recommendations.append(ratingsToMovie[idx][1])
         
         ########################################################################
         #                        END OF YOUR CODE                              #
@@ -430,7 +459,24 @@ class Chatbot:
         NOTE: Pass the debug information that you may think is important for
         your evaluators.
         """
+
+        # test for find_movies_by_title
         debug_info = 'debug info'
+        # id1 = "An American in Paris (1951)"
+        # id2 = "The Notebook (1220)"
+        # id3 = "Titanic"
+        # id4 = "Scream"
+        # l = list([id1, id2, id3, id4])
+        # # for elem in l:
+        # #     print(elem, self.find_movies_by_title(elem))
+
+        # test for extract_sentiment
+        # l2 = ["I didn't really like \"Titanic (1997)\"", "I never liked \"Titanic (1997)\"", "I really enjoyed \"Titanic (1997)\"",
+        #         "I saw \"Titanic (1997)\".",  "\"Titanic (1997)\" started out terrible, but the ending was totally great and I loved it!",
+        #         "I loved \"10 Things I Hate About You\""]
+        # for elem in l2:
+        #     print(elem, self.extract_sentiment(elem))
+        
         return debug_info
 
     ############################################################################
@@ -455,3 +501,4 @@ if __name__ == '__main__':
     print('To run your chatbot in an interactive loop from the command line, '
           'run:')
     print('    python3 repl.py')
+
