@@ -7,6 +7,7 @@ from collections import defaultdict
 import numpy as np
 from nltk.tokenize import word_tokenize
 import regex as re #changed
+import porter_stemmer
 
 
 # noinspection PyMethodMayBeStatic
@@ -193,13 +194,13 @@ class Chatbot:
                 currTitle = re.sub("(\([0-9]+\))", "", currTitle)
                 currWords = word_tokenize(currTitle)
                 sameMovie = True
-                for word in currWords: # check to see if every word in currMovie is also in your title
-                    if word != "," and word not in titleWords:
-                        sameMovie = False
-                for word in titleWords: # check to see if every word in your title is also in your movie
-                    if word != "," and word not in currWords:
-                        sameMovie = False
-                if sameMovie: # the vectorized words are subsets of each other
+                currWords = set(currWords)
+                titleWords = set(titleWords)
+                if ',' in currWords:
+                    currWords.remove(',')
+                if ',' in titleWords:
+                    titleWords.remove(',')
+                if currWords == titleWords: # the vectorized words are subsets of each other
                     if titleYear == [] or currYear[0] == titleYear[0]: # if there is a year specified in title make sure it matches
                         res.append(i) 
         return res
@@ -232,9 +233,11 @@ class Chatbot:
         lmd = 1
         preprocessed_input = word_tokenize(preprocessed_input)
         for item in preprocessed_input:
+            # p = porter_stemmer()
+            # stemmed_item = p.stem(item)
             # print(item)
             if item in self.sentiment:
-                print(item)
+                # print(item)
                 if "pos" in self.sentiment[item]:
                     pos_count += 1
                 if "neg" in self.sentiment[item]:
@@ -463,10 +466,10 @@ class Chatbot:
         # test for find_movies_by_title
         debug_info = 'debug info'
         id1 = "An American in Paris (1951)"
-        id2 = "The Notebook (1220)"
-        id3 = "Titanic"
-        id4 = "Scream"
-        l = list([id1, id2, id3, id4])
+        # id2 = "The Notebook (1220)"
+        # id3 = "Titanic"
+        # id4 = "Scream"
+        l = list([id1])
         for elem in l:
             print(elem, self.find_movies_by_title(elem))
 
