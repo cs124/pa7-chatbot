@@ -416,12 +416,10 @@ class Chatbot:
 
         # The starter code returns a new matrix shaped like ratings but full of
         # zeros.
-        binarized_ratings = np.where(ratings <= threshold, ratings, -1)
-        binarized_ratings = np.where(binarized_ratings > threshold, binarized_ratings, 1)
-
-
-        # binarized_ratings = np.zeros_like(ratings)
-
+        if threshold < 0:
+            binarized_ratings = np.where(ratings < threshold, -1, (np.where(ratings == 0, 0, 1)))
+        else:
+            binarized_ratings = np.where(ratings > threshold, 1, (np.where(ratings == 0, 0, -1)))
         ########################################################################
         #                        END OF YOUR CODE                              #
         ########################################################################
@@ -552,7 +550,8 @@ class Chatbot:
         Consider adding to this description any information about what your
         chatbot can do and how the user can interact with it.
         """
-        return """
+        return "Hi! This is a temporary intro string."
+        """
         Your task is to implement the chatbot as detailed in the PA6
         instructions.
         Remember: in the starter mode, movie names will come in quotation marks
