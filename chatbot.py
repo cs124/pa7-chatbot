@@ -32,7 +32,7 @@ class Chatbot:
         ########################################################################
 
         # Binarize the movie ratings before storing the binarized matrix.
-        self.ratings = ratings
+        self.ratings = self.binarize(ratings)
         ########################################################################
         #                             END OF YOUR CODE                         #
         ########################################################################
@@ -416,14 +416,16 @@ class Chatbot:
 
         # The starter code returns a new matrix shaped like ratings but full of
         # zeros.
-        if threshold < 0:
-            binarized_ratings = np.where(ratings < threshold, -1, (np.where(ratings == 0, 0, 1)))
-        else:
-            binarized_ratings = np.where(ratings > threshold, 1, (np.where(ratings == 0, 0, -1)))
+        
+        ratingsCopy = ratings.copy()
+        binarized_ratings = np.where(ratings <= threshold, ratings, 1)
+        binarized_ratings = np.where(ratings > threshold, binarized_ratings, -1)
+        ratingsCopy = np.where(ratingsCopy != 0, binarized_ratings, 0)
+
         ########################################################################
         #                        END OF YOUR CODE                              #
         ########################################################################
-        return binarized_ratings
+        return ratingsCopy
 
     def similarity(self, u, v):
         """Calculate the cosine similarity between two vectors.
@@ -490,20 +492,22 @@ class Chatbot:
         # Populate this list with k movie indices to recommend to the user.
         recommendations = []
         movieScore = {}
-        for i in range(len(ratings_matrix)):
-            for j in range(len(ratings_matrix)):
-                if i != j:
-                    if i not in movieScore:
-                        movieScore[i] = 0
+        rowLen = ratings_matrix.shape[0]
+        for i in range(rowLen):
+            movieScore[i] = 0
+            for j in range(rowLen):
+                if i != j and user_ratings[j] != 0:
                     movieScore[i] += self.similarity(ratings_matrix[i], ratings_matrix[j]) * user_ratings[j]
 
-        ratingsToMovie = []
+        scoresToMovie = []
         for movie in movieScore:
             if user_ratings[movie] == 0: #if the user has not watched the movie 
-                ratingsToMovie.append((movieScore[movie], movie))
-        ratingsToMovie = sorted(ratingsToMovie, reverse=True)
+                scoresToMovie.append((movieScore[movie], movie))
+            
+        scoresToMovie = sorted(scoresToMovie, reverse=True) #sorted(ratingsToMovie, key=lambda rating : rating[0], reverse=True)
         for idx in range(k):
-            recommendations.append(ratingsToMovie[idx][1])
+            recommendations.append(scoresToMovie[idx][1])
+        
         
         ########################################################################
         #                        END OF YOUR CODE                              #
