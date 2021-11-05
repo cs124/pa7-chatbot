@@ -5,8 +5,8 @@
 import util
 from collections import defaultdict
 import numpy as np
-from nltk.tokenize import word_tokenize
-import regex as re #changed
+# from nltk.tokenize import word_tokenize # need to delete
+import regex as re 
 from porter_stemmer import PorterStemmer
 
 
@@ -72,6 +72,20 @@ class Chatbot:
     ############################################################################
     # 2. Modules 2 and 3: extraction and transformation                        #
     ############################################################################
+    def tokenize(self, raw_text):
+        """
+        Tokenizes raw_text by seperating the input string by puncuation. Converts contractions
+        into full words. Returns a list of tokens
+        """
+        tokens = re.findall(r"\w+", raw_text)
+        for x in range(len(tokens)):
+            if tokens[x] == 's':
+                tokens[x] = 'is'
+            elif tokens[x] == 't':
+                tokens[x] = 'not'
+            elif tokens[x] == 're':
+                tokens[x] = 'are'
+        return tokens
 
     def process(self, line):
         """Process a line of input from the REPL and generate a response.
@@ -183,7 +197,7 @@ class Chatbot:
         res = []
         titleYear = re.findall("(\([0-9]+\))", title) 
         title = re.sub( "(\([0-9]+\))", "", title) # filter out year from original title
-        titleWords = word_tokenize(title)
+        titleWords = self.tokenize(title)
         # tokenize movie title, mamke sure every token in movie title input also in tokenized representation of movie
         for i in range(len(self.titles)):
             currTitle = self.titles[i][0]
@@ -192,7 +206,7 @@ class Chatbot:
             else:
                 currYear = re.findall("(\([0-9]+\))", currTitle)
                 currTitle = re.sub("(\([0-9]+\))", "", currTitle)
-                currWords = word_tokenize(currTitle)
+                currWords = self.tokenize(currTitle)
                 sameMovie = True
                 currWords = set(currWords)
                 titleWords = set(titleWords)
@@ -204,6 +218,33 @@ class Chatbot:
                     if titleYear == [] or currYear[0] == titleYear[0]: # if there is a year specified in title make sure it matches
                         res.append(i) 
         return res
+
+    # def levenshteinDistance(self, s1, s2): # https://stackoverflow.com/questions/2460177/edit-distance-in-python
+    #     # print(s1)
+    #     # print(s2)
+    #     if len(s1) > len(s2):
+    #         s1, s2 = s2, s1
+
+    #     distances = range(len(s1) + 1)
+    #     for i2, c2 in enumerate(s2):
+    #         distances_ = [i2+1]
+    #         for i1, c1 in enumerate(s1):
+    #             if c1 == c2:
+    #                 distances_.append(distances[i1])
+    #             else:
+    #                 distances_.append(1 + min((distances[i1], distances[i1 + 1], distances_[-1])))
+    #         distances = distances_
+    #     return distances[-1]
+
+    def extract_regex(self, s):
+        if s == "loved":
+            return "love"
+        if s == "enjoyed":
+            return "enjoy"
+        s = re.sub( "(d)$", "", s) 
+        s = re.sub( "(s)$", "", s) 
+        s = re.sub( "(ing)$", "", s) 
+        return s
 
     def extract_sentiment(self, preprocessed_input):
         """Extract a sentiment rating from a line of pre-processed text.
@@ -225,26 +266,46 @@ class Chatbot:
         pre-processed with preprocess()
         :returns: a numerical value for the sentiment of the text
         """
+        pos_count = 0.0
+        neg_count = 0.0
+        lmd = 1.0
+        neg_words = ["never", "not"]
 
-        # what kind of negation handling
-        # not working bc doesn't recognize words
-        pos_count = 0
-        neg_count = 0
-        lmd = 1
-        preprocessed_input = word_tokenize(preprocessed_input)
+        negated_flag = False
+        distance_from_negation = 0
+        max_negation_distance = 5
+        preprocessed_input = re.sub('"([^"]*)"', "", preprocessed_input).lower()
+        preprocessed_input = self.tokenize(preprocessed_input)
         for item in preprocessed_input:
-            p = PorterStemmer()
-            stemmed_item = p.stem(item)
             # print(item)
-            if item in self.sentiment:
-                # print(item)
-                if "pos" in self.sentiment[item]:
-                    pos_count += 1
-                if "neg" in self.sentiment[item]:
-                    neg_count += 1
-        print(pos_count)
-        print(neg_count)
-        if neg_count == 0 or pos_count / neg_count > lmd:
+            if distance_from_negation == max_negation_distance:
+                distance_from_negation = 0
+                negated_flag = False
+            if item not in self.sentiment:
+                item = self.extract_regex(item)
+            # print(item)
+            if item != None and item in neg_words:
+                negated_flag = not negated_flag
+                continue
+            if item not in self.sentiment:
+                continue
+            elif self.sentiment[item] != None and "pos" in self.sentiment[item]:
+                if negated_flag:
+                    neg_count += 1.0
+                else:
+                    pos_count += 1.0
+            elif self.sentiment[item] != None and "neg" in self.sentiment[item]:
+                if negated_flag:
+                    pos_count += 1.0
+                else:
+                    neg_count += 1.0
+            if negated_flag:
+                distance_from_negation += 1
+        if neg_count == 0.0 and pos_count == 0.0:
+            return 0
+        elif neg_count ==0:
+            return 1
+        if pos_count / neg_count > lmd:
             return 1
         elif pos_count / neg_count < lmd:
             return -1
