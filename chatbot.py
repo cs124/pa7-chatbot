@@ -34,7 +34,7 @@ class Chatbot:
         # Binarize the movie ratings before storing the binarized matrix.
         self.ratings = self.binarize(ratings)
 
-        self.user_ratings = np.zeros((1, len(ratings)))
+        self.user_ratings = np.zeros((len(ratings)))
 
         self.input_count = 0
         self.reachedRecommendation = False
@@ -52,7 +52,7 @@ class Chatbot:
         # TODO: Write a short greeting message                                 #
         ########################################################################
 
-        greeting_message = "How can I help you?"
+        greeting_message = "Yo! I'm ELON! It's a good day! I'm going to recommend a movie to you. First I will ask you about your taste in movies. Tell me about a movie that you have seen."
 
         ########################################################################
         #                             END OF YOUR CODE                         #
@@ -67,7 +67,7 @@ class Chatbot:
         # TODO: Write a short farewell message                                 #
         ########################################################################
 
-        goodbye_message = "Have a nice day!"
+        goodbye_message = "ELON wishes you a nice day! ELON says farewell -- full send!"
 
         ########################################################################
         #                          END OF YOUR CODE                            #
@@ -128,12 +128,15 @@ class Chatbot:
             movieTitle = self.extract_titles(self.preprocess(line))
             sentiment = self.extract_sentiment(line)
 
-            if len(movieTitle) >= 2: 
+            if len(movieTitle) == 0: # added this check for no movie
+                response = "Please input a movie in quotes."
+                return response
+            elif len(movieTitle) >= 2: 
                 response = "Please tell me about one movie at a time. Go ahead."
                 return response
             else:
-                movieIdx= self.find_movies_by_title(movieTitle)
-                if len(movieIdx >= 2):
+                movieIdx= self.find_movies_by_title(movieTitle[0]) # added [0] here
+                if len(movieIdx) >= 2:
                     response = "I found more than one movie called " + movieTitle[0] + ". Can you clarify?"
                     return response
                 else:
@@ -141,31 +144,25 @@ class Chatbot:
                     self.user_ratings = self.binarize(self.user_ratings)
                     self.ratings = self.binarize(self.ratings)
                     
-                    recommendations = self.recommend(self.user_ratings, self.ratings, len(self.titles), creative=False) #at most, k will be number of movies
+                    recommendations = self.recommend(self.user_ratings, self.ratings, len(self.titles) - 1, creative=False) #at most, k will be number of movies
                     i = 0
-                    answer = input('\"' + self.titles[i] + '\" would be a good movie for you! Would you like more recommendations?')
-                    while (answer.lower() == "yes"):
-                        answer = input('\"' + self.titles[i] + '\" would be a good movie for you! Would you like more recommendations?')
-                        if answer.lower() == "no":
-                            response = "Have a nice day. Fullsend!"
-                            break
-                        elif answer.lower() != "yes":
-                            response = "Please input \"Yes\" or \"No\". Thank you."
-                            continue
+                    answer = input('\"' + self.titles[i][0] + '\" would be a good movie for you! Would you like more recommendations?\n').lower()
+                    while (answer == "yes"):
                         i += 1
+                        answer = input('\"' + self.titles[i][0] + '\" would be a good movie for you! Would you like more recommendations?\n').lower()
+                        if answer == "no":
+                            # response = "Have a nice day. Fullsend!"
+                            break
+                        elif answer != "yes" and answer != 'no':
+                            currInput = input("Please input \"Yes\" or \"No\". ELON is disappointed in you. Let's try again. Would you like more recommendations?\n").lower()
+                            while (currInput != 'yes' and currInput != 'no'):
+                                currInput = input("Please input \"Yes\" or \"No\". ELON is disappointed in you. Let's try again. Would you like more recommendations?\n")
+                            answer = currInput
+                            
                         if i == len(self.titles):
-                            response = "We have no more recommendations-- Have a nice day. Fullsend!"
-
-
-                    
-                    # for recIdx in recommendations:
-                    #     response = '\"' + self.titles[recIdx] + '\" would be a good movie for you! Would you like more recommendations?'
-
-
-
-                    
-
-            response = "I processed {} in starter mode!!".format(line)
+                            response = "We have no more recommendations -- Have a nice day. Fullsend!"
+            response = self.goodbye()
+            # response = "I processed {} in starter mode!!".format(line)
 
         ########################################################################
         #                          END OF YOUR CODE                            #
@@ -542,6 +539,7 @@ class Chatbot:
         recommendations = []
         movieScore = {}
         rowLen = ratings_matrix.shape[0]
+        # print(user_ratings)
         for i in range(rowLen):
             movieScore[i] = 0
             for j in range(rowLen):
@@ -554,6 +552,7 @@ class Chatbot:
                 scoresToMovie.append((movieScore[movie], movie))
             
         scoresToMovie = sorted(scoresToMovie, reverse=True) #sorted(ratingsToMovie, key=lambda rating : rating[0], reverse=True)
+        # print(k)
         for idx in range(k):
             recommendations.append(scoresToMovie[idx][1])
         
