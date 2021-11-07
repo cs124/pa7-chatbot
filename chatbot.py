@@ -33,6 +33,11 @@ class Chatbot:
 
         # Binarize the movie ratings before storing the binarized matrix.
         self.ratings = self.binarize(ratings)
+
+        self.user_ratings = np.zeros((1, len(ratings)))
+
+        self.input_count = 0
+        self.reachedRecommendation = False
         ########################################################################
         #                             END OF YOUR CODE                         #
         ########################################################################
@@ -116,6 +121,50 @@ class Chatbot:
         if self.creative:
             response = "I processed {} in creative mode!!".format(line)
         else:
+            # In starter mode, your chatbot will help the user by giving movie recommendations. 
+            # It will ask the user to say something about movies they have liked, and it will come up with a recommendation based on those data points. 
+            # The user of the chatbot in starter mode will follow its instructions, so you will deal with fairly restricted input. 
+            # Movie names will come in quotation marks and expressions of sentiment will be simple.
+            movieTitle = self.extract_titles(self.preprocess(line))
+            sentiment = self.extract_sentiment(line)
+
+            if len(movieTitle) >= 2: 
+                response = "Please tell me about one movie at a time. Go ahead."
+                return response
+            else:
+                movieIdx= self.find_movies_by_title(movieTitle)
+                if len(movieIdx >= 2):
+                    response = "I found more than one movie called " + movieTitle[0] + ". Can you clarify?"
+                    return response
+                else:
+                    self.user_ratings[movieIdx] = sentiment
+                    self.user_ratings = self.binarize(self.user_ratings)
+                    self.ratings = self.binarize(self.ratings)
+                    
+                    recommendations = self.recommend(self.user_ratings, self.ratings, len(self.titles), creative=False) #at most, k will be number of movies
+                    i = 0
+                    answer = input('\"' + self.titles[i] + '\" would be a good movie for you! Would you like more recommendations?')
+                    while (answer.lower() == "yes"):
+                        answer = input('\"' + self.titles[i] + '\" would be a good movie for you! Would you like more recommendations?')
+                        if answer.lower() == "no":
+                            response = "Have a nice day. Fullsend!"
+                            break
+                        elif answer.lower() != "yes":
+                            response = "Please input \"Yes\" or \"No\". Thank you."
+                            continue
+                        i += 1
+                        if i == len(self.titles):
+                            response = "We have no more recommendations-- Have a nice day. Fullsend!"
+
+
+                    
+                    # for recIdx in recommendations:
+                    #     response = '\"' + self.titles[recIdx] + '\" would be a good movie for you! Would you like more recommendations?'
+
+
+
+                    
+
             response = "I processed {} in starter mode!!".format(line)
 
         ########################################################################
