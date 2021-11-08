@@ -52,7 +52,7 @@ class Chatbot:
         # TODO: Write a short greeting message                                 #
         ########################################################################
 
-        greeting_message = "Yo! I'm ELON! It's a good day! I'm going to recommend a movie to you. First I will ask you about your taste in movies. Tell me about a movie that you have seen."
+        greeting_message = "Yo! I'm ELON! It's a good day! I'm going to recommend a movie to you. First I will ask you about your taste in movies. Tell me about 5 movies that you have seen."
 
         ########################################################################
         #                             END OF YOUR CODE                         #
@@ -128,39 +128,58 @@ class Chatbot:
             movieTitle = self.extract_titles(self.preprocess(line))
             sentiment = self.extract_sentiment(line)
 
-            if len(movieTitle) == 0: # added this check for no movie
+            if len(movieTitle) == 0: # added this check for no movie, 
+                #what about the case where mentioned movie is not in the database??
                 response = "Please input a movie in quotes."
                 return response
             elif len(movieTitle) >= 2: 
                 response = "Please tell me about one movie at a time. Go ahead."
                 return response
             else:
-                movieIdx= self.find_movies_by_title(movieTitle[0]) # added [0] here
-                if len(movieIdx) >= 2:
-                    response = "I found more than one movie called " + movieTitle[0] + ". Can you clarify?"
-                    return response
+                movieIdx = self.find_movies_by_title(movieTitle[0]) # added [0] here
+                if len(movieIdx) == 0:
+                    return "ELON doesn't recognize this movie! Please try another movie."
+                elif len(movieIdx) >= 2:
+                    return "I found more than one movie called " + movieTitle[0] + ". Can you clarify?"
                 else:
+                    if self.user_ratings[movieIdx] == 0 and sentiment != 0:
+                        self.input_count += 1
                     self.user_ratings[movieIdx] = sentiment
-                    self.user_ratings = self.binarize(self.user_ratings)
-                    self.ratings = self.binarize(self.ratings)
-                    
-                    recommendations = self.recommend(self.user_ratings, self.ratings, len(self.titles) - 1, creative=False) #at most, k will be number of movies
-                    i = 0
-                    answer = input('\"' + self.titles[i][0] + '\" would be a good movie for you! Would you like more recommendations?\n').lower()
-                    while (answer == "yes"):
-                        i += 1
-                        answer = input('\"' + self.titles[i][0] + '\" would be a good movie for you! Would you like more recommendations?\n').lower()
-                        if answer == "no":
-                            # response = "Have a nice day. Fullsend!"
-                            break
-                        elif answer != "yes" and answer != 'no':
-                            currInput = input("Please input \"Yes\" or \"No\". ELON is disappointed in you. Let's try again. Would you like more recommendations?\n").lower()
-                            while (currInput != 'yes' and currInput != 'no'):
-                                currInput = input("Please input \"Yes\" or \"No\". ELON is disappointed in you. Let's try again. Would you like more recommendations?\n")
-                            answer = currInput
-                            
-                        if i == len(self.titles):
-                            response = "We have no more recommendations -- Have a nice day. Fullsend!"
+
+                    if self.input_count == 5:
+                        self.user_ratings = self.binarize(self.user_ratings)
+                        self.ratings = self.binarize(self.ratings)
+                        # print(len(self.titles)) #9125
+                        # print(self.user_ratings.shape) #(9125, )
+                        # print(self.ratings.shape) #(9125, 671)
+                        
+                         #get number of movies that the user haven't watched, and pass it in as k to recommend?
+                        k = len([rating for rating in self.user_ratings if rating == 0])
+                        recommendations = self.recommend(self.user_ratings, self.ratings, k, creative=False) #prior k: len(self.titles) - 1.  at most, k will be number of movies
+                        i = -1
+                        answer = "yes" 
+                        while (answer == "yes"):
+                            i += 1
+                            answer = input('\"' + self.titles[recommendations[i]][0] + '\" would be a good movie for you! Would you like more recommendations?\n').lower()
+                            if answer == "no":
+                                # response = "Have a nice day. Fullsend!"
+                                break
+                            elif answer != "yes" and answer != 'no':
+                                currInput = input("Please input \"Yes\" or \"No\". ELON is disappointed in you. Let's try again. Would you like more recommendations?\n").lower()
+                                while (currInput != 'yes' and currInput != 'no'):
+                                    currInput = input("Please input \"Yes\" or \"No\". ELON is disappointed in you. Let's try again. Would you like more recommendations?\n")
+                                answer = currInput
+                                
+                            if i == len(self.titles):
+                                response = "We have no more recommendations -- Have a nice day. Fullsend!"
+                    else: #if self.input_count < 5
+                        if sentiment == 1:
+                            return "Ok, you liked \"" + movieTitle[0] + "\"! Tell me what you thought of another movie."
+                        elif sentiment == -1:
+                            return "Ok, you didn't like \"" + movieTitle[0] + "\"! Tell me what you thought of another movie."
+                        else: 
+                            self.input_count -= 1
+                            return "It wasn't very clear whether you liked the movie \"" + movieTitle[0] + "\"! Would you please clarify?"
             response = self.goodbye()
             # response = "I processed {} in starter mode!!".format(line)
 
@@ -552,7 +571,8 @@ class Chatbot:
                 scoresToMovie.append((movieScore[movie], movie))
             
         scoresToMovie = sorted(scoresToMovie, reverse=True) #sorted(ratingsToMovie, key=lambda rating : rating[0], reverse=True)
-        # print(k)
+        print(len(scoresToMovie))
+        print(k)
         for idx in range(k):
             recommendations.append(scoresToMovie[idx][1])
         
