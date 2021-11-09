@@ -258,21 +258,18 @@ class Chatbot:
             movie_titles = []
             result = []
             for title in self.titles:
-                movie_titles.append(title[0].lower())
-                # if "notebook" in title[0].lower():
-                #     print(title[0].lower())
-                movie_titles.append(re.sub("( \([0-9]+\))", "", title[0]).lower()) # add both the title w/ year and without to list
+                movie_titles.append(sorted(self.tokenize(title[0].lower()))) # now storing movie titles tokenized list, sorted so out of order matches
+                movie_titles.append(sorted(self.tokenize(re.sub("( \([0-9]+\))", "", title[0]).lower()))) # add both the title w/ year and without to list
             allMovies = []
             
             preprocessed_input = re.sub("(\")", "", preprocessed_input)
             words = preprocessed_input.split()
             substrings = self.phrase_builder(words)
-            # print(substrings)
             for phrase in substrings:
-                if phrase.lower() in movie_titles:
+                # print(self.tokenize(phrase.lower()))
+                if sorted(self.tokenize(phrase.lower())) in movie_titles:
                     result.append(phrase)
             result_sorted = sorted(result)
-            # print(result_sorted)
             for i in range(1, len(result_sorted)):
                 if i < len(result_sorted):
                     i1 = result_sorted[i]
@@ -280,7 +277,6 @@ class Chatbot:
                     if re.sub( "(\([0-9]+\))", "", i1).strip() == re.sub( "(\([0-9]+\))", "", i2).strip():
                         result.remove(result_sorted[i - 1]) # remove the one without the year, it passes scream/titanic
                         result_sorted.pop(i)
-                        
             return result
 
         # for movie in substring:
@@ -665,7 +661,7 @@ class Chatbot:
 
         # test for find_movies_by_title
         debug_info = 'debug info'
-        id1 = "An American in Paris (1951)"
+        # id1 = "An American in Paris (1951)"
         # id2 = "The Notebook (1220)"
         # id3 = "Titanic"
         # id4 = "Scream"
@@ -674,12 +670,17 @@ class Chatbot:
         #     print(elem, self.find_movies_by_title(elem))
 
         # test for extract_sentiment
-        l2 = ["I didn't really like \"Titanic (1997)\"", "I never liked \"Titanic (1997)\"", "I really enjoyed \"Titanic (1997)\"",
-                "I saw \"Titanic (1997)\".",  "\"Titanic (1997)\" started out terrible, but the ending was totally great and I loved it!",
-                "I loved \"10 Things I Hate About You\""]
-        for elem in l2:
-            print(elem, self.extract_sentiment(elem))
+        # l2 = ["I didn't really like \"Titanic (1997)\"", "I never liked \"Titanic (1997)\"", "I really enjoyed \"Titanic (1997)\"",
+        #         "I saw \"Titanic (1997)\".",  "\"Titanic (1997)\" started out terrible, but the ending was totally great and I loved it!",
+        #         "I loved \"10 Things I Hate About You\""]
+        # for elem in l2:
+        #     print(elem, self.extract_sentiment(elem))
         
+        id1 = "I liked The NoTeBoOk!"
+        id2 = "I thought 10 things i hate about you was great"
+        l3 = list([id1, id2])
+        for elem in l3:
+            print(elem, self.extract_titles(elem))
         return debug_info
 
     ############################################################################
