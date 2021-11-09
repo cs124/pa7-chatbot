@@ -8,6 +8,7 @@ import numpy as np
 # from nltk.tokenize import word_tokenize # need to delete
 import regex as re 
 from porter_stemmer import PorterStemmer
+from itertools import combinations
 
 
 # noinspection PyMethodMayBeStatic
@@ -17,7 +18,7 @@ class Chatbot:
     def __init__(self, creative=False):
         # The chatbot's default name is `moviebot`.
         # TODO: Give your chatbot a new name.
-        self.name = 'moviebot'
+        self.name = 'ELON'
 
         self.creative = creative
 
@@ -52,7 +53,7 @@ class Chatbot:
         # TODO: Write a short greeting message                                 #
         ########################################################################
 
-        greeting_message = "Yo! I'm ELON! It's a good day! I'm going to recommend a movie to you. First I will ask you about your taste in movies. Tell me about 5 movies that you have seen."
+        greeting_message = "Hello, I'm ELON! I'm going to help you find a movie to watch. Tell me about a movie you watched and whether you liked the movie. Please put the name of the movie in quotation marks."
 
         ########################################################################
         #                             END OF YOUR CODE                         #
@@ -67,7 +68,7 @@ class Chatbot:
         # TODO: Write a short farewell message                                 #
         ########################################################################
 
-        goodbye_message = "ELON wishes you a nice day! ELON says farewell -- full send!"
+        goodbye_message = "I hope you have a great day and remember to full send!"
 
         ########################################################################
         #                          END OF YOUR CODE                            #
@@ -130,17 +131,17 @@ class Chatbot:
 
             if len(movieTitle) == 0: # added this check for no movie, 
                 #what about the case where mentioned movie is not in the database??
-                response = "Please input a movie in quotes."
+                response = "Please put quotation marks around the movie name so that I can tell what movie you are talking about."
                 return response
             elif len(movieTitle) >= 2: 
-                response = "Please tell me about one movie at a time. Go ahead."
+                response = "Please tell me about one movie at a time. What's one movie you have seen?"
                 return response
             else:
                 movieIdx = self.find_movies_by_title(movieTitle[0]) # added [0] here
                 if len(movieIdx) == 0:
-                    return "ELON doesn't recognize this movie! Please try another movie."
+                    return "Huh, I\'m not sure what movie you are talking about. What's a different movie that you have seen?"
                 elif len(movieIdx) >= 2:
-                    return "I found more than one movie called " + movieTitle[0] + ". Can you clarify?"
+                    return "I found more than one movie called " + movieTitle[0] + ". Which one were you trying to tell me about?"
                 else:
                     if self.user_ratings[movieIdx] == 0 and sentiment != 0:
                         self.input_count += 1
@@ -157,14 +158,16 @@ class Chatbot:
                         k = len([rating for rating in self.user_ratings if rating == 0])
                         recommendations = self.recommend(self.user_ratings, self.ratings, k, creative=False) #prior k: len(self.titles) - 1.  at most, k will be number of movies
                         i = -1
+                        affirmative = ["yes", "sure", "ok", "yeah", "y", "affirmative", "i guess so", "fine", "always"]
+                        negative = ["no", "nah", "never", "negative", "n", "no thanks", "no, thanks", "nope"]
                         answer = "yes" 
-                        while (answer == "yes"):
+                        while (answer in affirmative):
                             i += 1
-                            answer = input('\"' + self.titles[recommendations[i]][0] + '\" would be a good movie for you! Would you like more recommendations?\n').lower()
-                            if answer == "no":
+                            answer = input('I think you\'ll enjoy watching\"' + self.titles[recommendations[i]][0] + '\"! Would you like another recommendations?\n').lower()
+                            if answer in negative:
                                 # response = "Have a nice day. Fullsend!"
                                 break
-                            elif answer != "yes" and answer != 'no':
+                            elif answer not in affirmative and answer not in negative:
                                 currInput = input("Please input \"Yes\" or \"No\". ELON is disappointed in you. Let's try again. Would you like more recommendations?\n").lower()
                                 while (currInput != 'yes' and currInput != 'no'):
                                     currInput = input("Please input \"Yes\" or \"No\". ELON is disappointed in you. Let's try again. Would you like more recommendations?\n")
@@ -179,7 +182,7 @@ class Chatbot:
                             return "Ok, you didn't like \"" + movieTitle[0] + "\"! Tell me what you thought of another movie."
                         else: 
                             self.input_count -= 1
-                            return "It wasn't very clear whether you liked the movie \"" + movieTitle[0] + "\"! Would you please clarify?"
+                            return "I'm confused, did you like \"" + movieTitle[0] + "\"? Please try to clarify if you liked the movie."
             response = self.goodbye()
             # response = "I processed {} in starter mode!!".format(line)
 
@@ -218,6 +221,17 @@ class Chatbot:
 
         return text
 
+    def phrase_builder(self, my_words): # https://stackoverflow.com/questions/24964862/printing-all-possible-phrases-consecutive-combinations-of-words-in-a-given-str/24965141
+        phrases = []
+        for i, word in enumerate(my_words):
+            phrases.append(word)
+            for nextword in my_words[i+1:]:
+                phrases.append(phrases[-1] + " " + nextword)
+                # Remove the one-word phrase.
+                if word in phrases:
+                    phrases.remove(word)
+        return phrases
+
     def extract_titles(self, preprocessed_input):
         """Extract potential movie titles from a line of pre-processed text.
         Given an input text which has been pre-processed with preprocess(),
@@ -238,8 +252,47 @@ class Chatbot:
         pre-processed with preprocess()
         :returns: list of movie titles that are potentially in the text
         """ 
-        allMovies = re.findall('"([^"]*)"', preprocessed_input)
-        return allMovies
+        if self.creative:
+            return re.findall('"([^"]*)"', preprocessed_input)
+        else:
+            movie_titles = []
+            result = []
+            for title in self.titles:
+                movie_titles.append(title[0].lower())
+                # if "notebook" in title[0].lower():
+                #     print(title[0].lower())
+                movie_titles.append(re.sub("( \([0-9]+\))", "", title[0]).lower()) # add both the title w/ year and without to list
+            allMovies = []
+            
+            preprocessed_input = re.sub("(\")", "", preprocessed_input)
+            words = preprocessed_input.split()
+            substrings = self.phrase_builder(words)
+            # print(substrings)
+            for phrase in substrings:
+                if phrase.lower() in movie_titles:
+                    result.append(phrase)
+            result_sorted = sorted(result)
+            # print(result_sorted)
+            for i in range(1, len(result_sorted)):
+                if i < len(result_sorted):
+                    i1 = result_sorted[i]
+                    i2 = result_sorted[i - 1]
+                    if re.sub( "(\([0-9]+\))", "", i1).strip() == re.sub( "(\([0-9]+\))", "", i2).strip():
+                        result.remove(result_sorted[i - 1]) # remove the one without the year, it passes scream/titanic
+                        result_sorted.pop(i)
+                        
+            return result
+
+        # for movie in substring:
+        #     if movie in self.titles
+
+        # allMovies = []
+        # for movie in self.titles:
+        #     movie = movie[0]
+        #     movieTitle = re.sub("(\([0-9]+\))", "", movie)
+        #     if movieTitle in preprocessed_input and movieTitle not in allMovies:
+        #         allMovies.append(movie)
+        # return allMovies
 
     def find_movies_by_title(self, title):
         """ Given a movie title, return a list of indices of matching movies.
@@ -448,7 +501,23 @@ class Chatbot:
         :returns: a list of indices corresponding to the movies identified by
         the clarification
         """
-        pass
+        # new_candidates = []
+        # for indice in candidates:
+        #     if clarification in self.titles[indice][0] and indice not in new_candidates:
+        #         new_candidates.append(indice)
+        # titleYear = re.findall("(\([0-9]+\))", clarification) 
+        # for indice in candidates:
+        #     candidate_year = re.findall("(\([0-9]+\))", self.titles[indice][0])
+        #     if indice not in new_candidates:
+        #         if title_year != "" and titleYear == candidate_year:
+        #             new_candidates.append(indice)
+        #         elif clarification == candidate_year:
+        #             new_candidates.append(indice)
+        #         elif clarification == candidate_year[1:5]:
+        # return new_candidates
+        
+
+
 
     ############################################################################
     # 3. Movie Recommendation helper functions                                 #
@@ -571,8 +640,8 @@ class Chatbot:
                 scoresToMovie.append((movieScore[movie], movie))
             
         scoresToMovie = sorted(scoresToMovie, reverse=True) #sorted(ratingsToMovie, key=lambda rating : rating[0], reverse=True)
-        print(len(scoresToMovie))
-        print(k)
+        # print(len(scoresToMovie))
+        # print(k)
         for idx in range(k):
             recommendations.append(scoresToMovie[idx][1])
         
