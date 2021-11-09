@@ -8,6 +8,7 @@ import numpy as np
 # from nltk.tokenize import word_tokenize # need to delete
 import regex as re 
 from porter_stemmer import PorterStemmer
+from itertools import combinations
 
 
 # noinspection PyMethodMayBeStatic
@@ -220,6 +221,17 @@ class Chatbot:
 
         return text
 
+    def phrase_builder(self, my_words): # https://stackoverflow.com/questions/24964862/printing-all-possible-phrases-consecutive-combinations-of-words-in-a-given-str/24965141
+        phrases = []
+        for i, word in enumerate(my_words):
+            phrases.append(word)
+            for nextword in my_words[i+1:]:
+                phrases.append(phrases[-1] + " " + nextword)
+                # Remove the one-word phrase.
+                if word in phrases:
+                    phrases.remove(word)
+        return phrases
+
     def extract_titles(self, preprocessed_input):
         """Extract potential movie titles from a line of pre-processed text.
         Given an input text which has been pre-processed with preprocess(),
@@ -240,8 +252,43 @@ class Chatbot:
         pre-processed with preprocess()
         :returns: list of movie titles that are potentially in the text
         """ 
-        allMovies = re.findall('"([^"]*)"', preprocessed_input)
-        return allMovies
+        if self.creative:
+            return re.findall('"([^"]*)"', preprocessed_input)
+        else:
+            movie_titles = []
+            result = []
+            for title in self.titles:
+                movie_titles.append(sorted(self.tokenize(title[0].lower()))) # now storing movie titles tokenized list, sorted so out of order matches
+                movie_titles.append(sorted(self.tokenize(re.sub("( \([0-9]+\))", "", title[0]).lower()))) # add both the title w/ year and without to list
+            allMovies = []
+            
+            preprocessed_input = re.sub("(\")", "", preprocessed_input)
+            words = preprocessed_input.split()
+            substrings = self.phrase_builder(words)
+            for phrase in substrings:
+                # print(self.tokenize(phrase.lower()))
+                if sorted(self.tokenize(phrase.lower())) in movie_titles:
+                    result.append(phrase)
+            result_sorted = sorted(result)
+            for i in range(1, len(result_sorted)):
+                if i < len(result_sorted):
+                    i1 = result_sorted[i]
+                    i2 = result_sorted[i - 1]
+                    if re.sub( "(\([0-9]+\))", "", i1).strip() == re.sub( "(\([0-9]+\))", "", i2).strip():
+                        result.remove(result_sorted[i - 1]) # remove the one without the year, it passes scream/titanic
+                        result_sorted.pop(i)
+            return result
+
+        # for movie in substring:
+        #     if movie in self.titles
+
+        # allMovies = []
+        # for movie in self.titles:
+        #     movie = movie[0]
+        #     movieTitle = re.sub("(\([0-9]+\))", "", movie)
+        #     if movieTitle in preprocessed_input and movieTitle not in allMovies:
+        #         allMovies.append(movie)
+        # return allMovies
 
     def find_movies_by_title(self, title):
         """ Given a movie title, return a list of indices of matching movies.
@@ -450,20 +497,20 @@ class Chatbot:
         :returns: a list of indices corresponding to the movies identified by
         the clarification
         """
-        new_candidates = []
-        for indice in candidates:
-            if clarification in self.titles[indice][0] and indice not in new_candidates:
-                new_candidates.append(indice)
-        titleYear = re.findall("(\([0-9]+\))", clarification) 
-        for indice in candidates:
-            candidate_year = re.findall("(\([0-9]+\))", self.titles[indice][0])
-            if indice not in new_candidates:
-                if title_year != "" and titleYear == candidate_year:
-                    new_candidates.append(indice)
-                elif clarification == candidate_year:
-                    new_candidates.append(indice)
-                elif clarification == candidate_year[1:5]:
-        return new_candidates
+        # new_candidates = []
+        # for indice in candidates:
+        #     if clarification in self.titles[indice][0] and indice not in new_candidates:
+        #         new_candidates.append(indice)
+        # titleYear = re.findall("(\([0-9]+\))", clarification) 
+        # for indice in candidates:
+        #     candidate_year = re.findall("(\([0-9]+\))", self.titles[indice][0])
+        #     if indice not in new_candidates:
+        #         if title_year != "" and titleYear == candidate_year:
+        #             new_candidates.append(indice)
+        #         elif clarification == candidate_year:
+        #             new_candidates.append(indice)
+        #         elif clarification == candidate_year[1:5]:
+        # return new_candidates
         
 
 
@@ -589,8 +636,8 @@ class Chatbot:
                 scoresToMovie.append((movieScore[movie], movie))
             
         scoresToMovie = sorted(scoresToMovie, reverse=True) #sorted(ratingsToMovie, key=lambda rating : rating[0], reverse=True)
-        print(len(scoresToMovie))
-        print(k)
+        # print(len(scoresToMovie))
+        # print(k)
         for idx in range(k):
             recommendations.append(scoresToMovie[idx][1])
         
@@ -614,7 +661,7 @@ class Chatbot:
 
         # test for find_movies_by_title
         debug_info = 'debug info'
-        id1 = "An American in Paris (1951)"
+        # id1 = "An American in Paris (1951)"
         # id2 = "The Notebook (1220)"
         # id3 = "Titanic"
         # id4 = "Scream"
@@ -623,12 +670,17 @@ class Chatbot:
         #     print(elem, self.find_movies_by_title(elem))
 
         # test for extract_sentiment
-        l2 = ["I didn't really like \"Titanic (1997)\"", "I never liked \"Titanic (1997)\"", "I really enjoyed \"Titanic (1997)\"",
-                "I saw \"Titanic (1997)\".",  "\"Titanic (1997)\" started out terrible, but the ending was totally great and I loved it!",
-                "I loved \"10 Things I Hate About You\""]
-        for elem in l2:
-            print(elem, self.extract_sentiment(elem))
+        # l2 = ["I didn't really like \"Titanic (1997)\"", "I never liked \"Titanic (1997)\"", "I really enjoyed \"Titanic (1997)\"",
+        #         "I saw \"Titanic (1997)\".",  "\"Titanic (1997)\" started out terrible, but the ending was totally great and I loved it!",
+        #         "I loved \"10 Things I Hate About You\""]
+        # for elem in l2:
+        #     print(elem, self.extract_sentiment(elem))
         
+        id1 = "I liked The NoTeBoOk!"
+        id2 = "I thought 10 things i hate about you was great"
+        l3 = list([id1, id2])
+        for elem in l3:
+            print(elem, self.extract_titles(elem))
         return debug_info
 
     ############################################################################
