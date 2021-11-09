@@ -52,8 +52,11 @@ class Chatbot:
         ########################################################################
         # TODO: Write a short greeting message                                 #
         ########################################################################
+        if self.creative:
+            greeting_message = "Hello, I'm ELON! I'm going to help you find a movie to watch. Tell me about a movie you watched and whether you liked the movie."
 
-        greeting_message = "Hello, I'm ELON! I'm going to help you find a movie to watch. Tell me about a movie you watched and whether you liked the movie. Please put the name of the movie in quotation marks."
+        else:
+            greeting_message = "Hello, I'm ELON! I'm going to help you find a movie to watch. Tell me about a movie you watched and whether you liked the movie. Please put the name of the movie in quotation marks."
 
         ########################################################################
         #                             END OF YOUR CODE                         #
@@ -120,7 +123,64 @@ class Chatbot:
         # code in a modular fashion to make it easier to improve and debug.    #
         ########################################################################
         if self.creative:
-            response = "I processed {} in creative mode!!".format(line)
+            movieTitle = self.extract_titles(self.preprocess(line))
+            sentiment = self.extract_sentiment(line)
+
+            if len(movieTitle) == 0: # added this check for no movie, 
+                #what about the case where mentioned movie is not in the database??
+                response = "Please use the correct movie title so that I can tell what movie you are talking about."
+                return response
+            elif len(movieTitle) >= 2: 
+                response = "Please tell me about one movie at a time. What's one movie you have seen?"
+                return response
+            else:
+                movieIdx = self.find_movies_by_title(movieTitle[0]) # added [0] here
+                if len(movieIdx) == 0:
+                    return "Huh, I\'m not sure what movie you are talking about. What's a different movie that you have seen?"
+                elif len(movieIdx) >= 2:
+                    return "I found more than one movie called " + movieTitle[0] + ". Which one were you trying to tell me about?"
+                else:
+                    if self.user_ratings[movieIdx] == 0 and sentiment != 0:
+                        self.input_count += 1
+                    self.user_ratings[movieIdx] = sentiment
+
+                    if self.input_count == 5:
+                        self.user_ratings = self.binarize(self.user_ratings)
+                        self.ratings = self.binarize(self.ratings)
+                        # print(len(self.titles)) #9125
+                        # print(self.user_ratings.shape) #(9125, )
+                        # print(self.ratings.shape) #(9125, 671)
+                        
+                         #get number of movies that the user haven't watched, and pass it in as k to recommend?
+                        k = len([rating for rating in self.user_ratings if rating == 0])
+                        recommendations = self.recommend(self.user_ratings, self.ratings, k, creative=False) #prior k: len(self.titles) - 1.  at most, k will be number of movies
+                        i = -1
+                        affirmative = ["yes", "sure", "ok", "yeah", "y", "affirmative", "i guess so", "fine", "always"]
+                        negative = ["no", "nah", "never", "negative", "n", "no thanks", "no, thanks", "nope"]
+                        answer = "yes" 
+                        while (answer in affirmative):
+                            i += 1
+                            answer = input('I think you\'ll enjoy watching\"' + self.titles[recommendations[i]][0] + '\"! Would you like another recommendations?\n').lower()
+                            if answer in negative:
+                                # response = "Have a nice day. Fullsend!"
+                                break
+                            elif answer not in affirmative and answer not in negative:
+                                currInput = input("Please input \"Yes\" or \"No\". ELON is disappointed in you. Let's try again. Would you like more recommendations?\n").lower()
+                                while (currInput != 'yes' and currInput != 'no'):
+                                    currInput = input("Please input \"Yes\" or \"No\". ELON is disappointed in you. Let's try again. Would you like more recommendations?\n")
+                                answer = currInput
+                                
+                            if i == len(self.titles):
+                                response = "We have no more recommendations -- Have a nice day. Fullsend!"
+                    else: #if self.input_count < 5
+                        if sentiment == 1:
+                            return "Ok, you liked \"" + movieTitle[0] + "\"! Tell me what you thought of another movie."
+                        elif sentiment == -1:
+                            return "Ok, you didn't like \"" + movieTitle[0] + "\"! Tell me what you thought of another movie."
+                        else: 
+                            self.input_count -= 1
+                            return "I'm confused, did you like \"" + movieTitle[0] + "\"? Please try to clarify if you liked the movie."
+            response = self.goodbye()
         else:
             # In starter mode, your chatbot will help the user by giving movie recommendations. 
             # It will ask the user to say something about movies they have liked, and it will come up with a recommendation based on those data points. 
@@ -252,7 +312,7 @@ class Chatbot:
         pre-processed with preprocess()
         :returns: list of movie titles that are potentially in the text
         """ 
-        if self.creative:
+        if not self.creative:
             return re.findall('"([^"]*)"', preprocessed_input)
         else:
             movie_titles = []
@@ -268,7 +328,8 @@ class Chatbot:
             for phrase in substrings:
                 # print(self.tokenize(phrase.lower()))
                 if sorted(self.tokenize(phrase.lower())) in movie_titles:
-                    result.append(phrase)
+                    stripped_phrase = re.sub(r'[^\w\s()]', '', phrase)
+                    result.append(stripped_phrase)
             result_sorted = sorted(result)
             for i in range(1, len(result_sorted)):
                 if i < len(result_sorted):
@@ -308,30 +369,73 @@ class Chatbot:
         :param title: a string containing a movie title
         :returns: a list of indices of matching movies
         """
-        res = []
-        titleYear = re.findall("(\([0-9]+\))", title) 
-        title = re.sub( "(\([0-9]+\))", "", title) # filter out year from original title
-        titleWords = self.tokenize(title)
-        # tokenize movie title, mamke sure every token in movie title input also in tokenized representation of movie
-        for i in range(len(self.titles)):
-            currTitle = self.titles[i][0]
-            if currTitle == title:
-                res.append(i)
-            else:
-                currYear = re.findall("(\([0-9]+\))", currTitle)
-                currTitle = re.sub("(\([0-9]+\))", "", currTitle)
-                currWords = self.tokenize(currTitle)
-                sameMovie = True
-                currWords = set(currWords)
-                titleWords = set(titleWords)
-                if ',' in currWords:
-                    currWords.remove(',')
-                if ',' in titleWords:
-                    titleWords.remove(',')
-                if currWords == titleWords: # the vectorized words are subsets of each other
-                    if titleYear == [] or currYear[0] == titleYear[0]: # if there is a year specified in title make sure it matches
-                        res.append(i) 
-        return res
+        if self.creative:
+            movie_titles = []
+            res = []
+            titleYear = []
+            titleWords = []
+            for t in self.titles:
+                movie_titles.append((t[0].lower())) # now storing movie titles tokenized list, sorted so out of order matches
+            
+            title = title.lower()
+            titleYear.append(re.findall("(\([0-9]+\))", title))
+            title = re.sub( "(\([0-9]+\))", "", title) # filter out year from original title
+            titleWords = self.tokenize(title)
+
+            if titleWords[0] in ("the", "a", "an", "le", "el", "la"):
+                the = titleWords[0]
+                titleWords.remove(the)
+                newTitle = ' '.join(titleWords)
+                newTitle += ", " + the
+                title = newTitle
+
+            for i in range(len(movie_titles)):
+                currTitle = movie_titles[i]
+               
+                if title in currTitle:
+                    res.append(i)
+                else:
+                    currYear = re.findall("(\([0-9]+\))", currTitle)
+                    currTitle = re.sub("(\([0-9]+\))", "", currTitle)
+                    currWords = self.tokenize(currTitle)
+                    sameMovie = True
+                    currWords = set(currWords)
+                    titleWords = set(titleWords)
+                    if ',' in currWords:
+                        currWords.remove(',')
+                    if ',' in titleWords:
+                        titleWords.remove(',')
+                    if currWords == titleWords: # the vectorized words are subsets of each other
+                        if titleYear == [] or currYear[0] == titleYear[0]: # if there is a year specified in title make sure it matches
+                            res.append(i) 
+            return res
+
+
+        else:
+            res = []
+            titleYear = re.findall("(\([0-9]+\))", title) 
+            title = re.sub( "(\([0-9]+\))", "", title) # filter out year from original title
+            titleWords = self.tokenize(title)
+            # tokenize movie title, mamke sure every token in movie title input also in tokenized representation of movie
+            for i in range(len(self.titles)):
+                currTitle = self.titles[i][0]
+                if currTitle == title:
+                    res.append(i)
+                else:
+                    currYear = re.findall("(\([0-9]+\))", currTitle)
+                    currTitle = re.sub("(\([0-9]+\))", "", currTitle)
+                    currWords = self.tokenize(currTitle)
+                    sameMovie = True
+                    currWords = set(currWords)
+                    titleWords = set(titleWords)
+                    if ',' in currWords:
+                        currWords.remove(',')
+                    if ',' in titleWords:
+                        titleWords.remove(',')
+                    if currWords == titleWords: # the vectorized words are subsets of each other
+                        if titleYear == [] or currYear[0] == titleYear[0]: # if there is a year specified in title make sure it matches
+                            res.append(i) 
+            return res
 
     # def levenshteinDistance(self, s1, s2): # https://stackoverflow.com/questions/2460177/edit-distance-in-python
     #     # print(s1)
@@ -676,11 +780,13 @@ class Chatbot:
         # for elem in l2:
         #     print(elem, self.extract_sentiment(elem))
         
-        id1 = "I liked The NoTeBoOk!"
+        id1 = "I liked The NoTeBoOk (2004)!"
         id2 = "I thought 10 things i hate about you was great"
+        id3 = "I liked The Notebook and I liked 10 things i hate about you was great"
         l3 = list([id1, id2])
         for elem in l3:
-            print(elem, self.extract_titles(elem))
+            for title in self.extract_titles(elem):
+                print(elem, self.find_movies_by_title(title))
         return debug_info
 
     ############################################################################
