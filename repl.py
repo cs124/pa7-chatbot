@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
-# PA6, CS124, Stanford, Winter 2019
-# v.1.0.3
+# PA7, CS124, Stanford
+# v.1.0.4
 #
 # Original Python code by Ignacio Cases (@cases)
 #
@@ -38,8 +38,8 @@ HEADER = """Welcome to Stanford CS124's
 |_______||__| |__||__| |__|  |___|  |_______||_______|  |___|  |__|
 """
 
-pa6_description = 'Simple Read-Eval-Print-Loop that handles the input/output ' \
-                  'part of the conversational agent '
+description = 'Simple Read-Eval-Print-Loop that handles the input/output ' \
+              'part of the conversational agent '
 
 
 class REPL(cmd.Cmd):
@@ -136,7 +136,7 @@ class REPL(cmd.Cmd):
 
 
 def process_command_line():
-    parser = argparse.ArgumentParser(description=pa6_description)
+    parser = argparse.ArgumentParser(description=description)
     parser.add_argument('--creative', dest='creative', action='store_true',
                         default=False, help='Enables creative mode')
     args = parser.parse_args()

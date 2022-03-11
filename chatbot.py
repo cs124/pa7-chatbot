@@ -1,5 +1,6 @@
-# PA7, CS124, Stanford, Winter 2019
-# v.1.0.3
+# PA7, CS124, Stanford
+# v.1.0.4
+#
 # Original Python code by Ignacio Cases (@cases)
 ######################################################################
 import util

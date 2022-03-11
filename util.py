@@ -2,7 +2,7 @@
 
 Ported to Python 3 by Matt Mistele (@mmistele) and Sam Redmond (@sredmond).
 
-Intended for PA6 in Stanford's Winter 2019 CS124.
+Intended for PA7 in Stanford's CS124.
 """
 import csv
 from typing import Tuple, List, Dict
