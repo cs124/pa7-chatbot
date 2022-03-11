@@ -1,4 +1,4 @@
-# Homework 6: Chatbot! 
+# Programming Assignment 7: Chatbot! 
 
 **Late days CANNOT be used on this assignment. Please submit early and often to avoid last minute submission issues!**
 

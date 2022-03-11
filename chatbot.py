@@ -1,4 +1,4 @@
-# PA6, CS124, Stanford, Winter 2019
+# PA7, CS124, Stanford, Winter 2019
 # v.1.0.3
 # Original Python code by Ignacio Cases (@cases)
 ######################################################################
@@ -401,7 +401,7 @@ class Chatbot:
         chatbot can do and how the user can interact with it.
         """
         return """
-        Your task is to implement the chatbot as detailed in the PA6
+        Your task is to implement the chatbot as detailed in the PA7
         instructions.
         Remember: in the starter mode, movie names will come in quotation marks
         and expressions of sentiment will be simple!
