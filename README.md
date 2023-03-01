@@ -8,6 +8,40 @@ In this assignment you will build a chatbot somewhat like the chatbot ELIZA that
 
 To get you started, we will guide you in the implementation of a chatbot that can recommend movies to the user – this will be referred to as the **starter** mode. After you have implemented the movie-recommender chatbot, you will switch to a **creative** mode and implement an interesting extension of the movie recommender, or something totally new. Be creative, and have fun!
 
+## Contents of this file!
+This is a big file! Here are the main sections:
+
+**Background and Overview:**
+- [Background](#a-little-bit-of-background)
+- [High Level Spec](#high-level-specification)
+
+**Getting started: Starter Mode, REPL, and resources**
+- [Starting to code: warm up](#starting-to-code-warm-up)
+- [Starter code and REPL](#running-the-starter-code)
+- [Starter Mode Overview](#starter-mode-60-points)
+- [Writing code for starter mode](#writing-code-for-starter-mode)
+- [Movie Database](#your-movie-database-movielens)
+- [Sentiment Lexicon](#your-sentiment-lexicon)
+
+**Debugging and Testing**
+- [Running sanity check](#sanity-check)
+- [Local script testing](#local-script-testing)
+- [Printing debug info](#printing-debug-info) We give you some built in debugging tools! Check them out!
+- [Important tips and notes](#important-notes-and-tips) **Important!!**
+- [Other resources and code size](#other-resources-and-code-size)
+
+**Creative Mode**
+- [Creative Mode Overview](#creative-mode-45-points)
+- [Switching to Creative Mode](#switching-to-creative-mode)
+- [How are starter and creative mode different?](#difference-between-starter-mode-and-creative-mode)
+
+**Evaluation and Rubric (answers to your grading questions!)**
+- [Evaluation](#evaluation) (the rubric is here!)
+- [Ethics question](#ethics-question) We're evaluating this, too!
+
+**Submitting**
+- [Submitting Your Solution](#submitting-your-solution) As always, submit **early AND often!!**
+
 ## A little bit of background
 In the early 1960s, the well-known early artificial intelligence (AI) program ELIZA made a big impact after showing its ability to process input and produce output expressed in natural language. [ELIZA](https://en.wikipedia.org/wiki/ELIZA) was one of the first conversational agents in AI, designed to simulate intelligent conversations, also known as chatbots. Developed by [Joseph Weizenbaum](https://en.wikipedia.org/wiki/Joseph_Weizenbaum) at MIT, ELIZA had several modules to interact in English, German, and Welsh, and different modes of operation. The most famous was a module that simulated the interaction with a [Rogerian psychotherapist](https://en.wikipedia.org/wiki/Person-centered_therapy). A typical conversation with ELIZA (all caps) was as follows:
 
@@ -59,7 +93,11 @@ This will useful when you want to test the same script multiple times. We will b
 All the code that you will need to write for this assignment will be in `chatbot.py`. Open that file and follow the instructions there to change the name of the chatbot, the greeting message, and the goodbye message. You can change your chatbot’s name now!
 
 # Starter Mode (60 points)
-In starter mode, your chatbot will help the user by giving movie recommendations. It will ask the user to say something about movies they have liked, and it will come up with a recommendation based on those data points. The user of the chatbot in starter mode will follow its instructions, so you will deal with fairly restricted input. Movie names will come in quotation marks and expressions of sentiment will be simple. Here is an example of how this might go:
+In starter mode, your chatbot will help the user by giving movie recommendations. It will ask the user to say something about movies they have liked, and it will come up with a recommendation based on those data points. The user of the chatbot in starter mode will follow its instructions, so you will deal with fairly restricted input. Specifically, you can assume:
+- **Movie names** will come in **quotation marks**
+- **Expressions of sentiment** will be **simple**
+
+Here is an example of how this might go:
 
     moviebot> Hi! I'm MovieBot! I'm going to recommend a movie to you. First I will ask you about your taste in movies. Tell me about a movie that you have seen.
     > I really liked Moneyball.
@@ -103,23 +141,47 @@ It’s up to you to provide appropriate guidance for the user, so that they give
 # Writing code for starter mode
 The REPL class calls the process method in the Chatbot class each time the user enters a string. Your implementation of process should handle the input, update internal data structures accordingly, and output a nice response for the user.
 
-We've decomposed some of the core logic for you. You will need to implement the following four methods:
+### Implementing core logic: `extract_titles`, `find_movies_by_title`, `extract_sentiment`, and `recommend`
+We've decomposed some of the core logic for you. You will need to implement the following four methods, per the specifications [in the rubric](#evaluation):
 
 `extract_titles(preprocessed_input)`: given an input text, output a list of plausible movie titles that are mentioned in text, i.e. substrings for the bot to look up in the movie database. For starter mode, this function should simply output all substrings that were found between quotation marks.
 
-`find_movies_by_title(title)`: return a list of indices corresponding to titles in the movie database matching the given title. The year may or may not be included in title, and the function should handle the way many movies in the database have English articles (a, an, the) moved to the end. For example, find_movies_by_title("The American President") should return [10], where 10 is the index of "American President, The (1995)". If a year is not provided, a title may match multiple: find_movies_by_title("Titanic") should return [1359, 2716], corresponding to the 1997 and 1953 versions, whereas find_movies_by_title("Titanic (1997)") should return simply [1359].
+`find_movies_by_title(title)`: return a list of indices corresponding to titles in the movie database matching the given title. As a baseline, you are expected to handle:
+- Titles with or without the year included
+    - If a year is not provided, a title may match multiple
+    - find_movies_by_title("Titanic") should return [1359, 2716], corresponding to the 1997 and 1953 versions
+    - find_movies_by_title("Titanic (1997)") should return simply [1359]
+- The way many movies in the database have English articles (a, an, the) moved to the end. 
+    - For example, find_movies_by_title("The American President") should return [10], where 10 is the index of "American President, The (1995)". 
 
-`extract_sentiment(preprocessed_input)`: extract the sentiment of text. For starter mode, return -1 if text has negative sentiment, 1 if positive sentiment, and 0 if no non-neutral sentiment detected.
+`extract_sentiment(preprocessed_input)`: extract the sentiment of text. For starter mode:
+- return -1 if text has negative sentiment
+- 1 if positive sentiment
+- 0 if no non-neutral sentiment detected.
+- If you're not sure where to get started, check out [the provided lexicon](#your-sentiment-lexicon) and think about how you might use this with techniques learned on previous PAs!
 
-`recommend(user_ratings, ratings, k)`: Given the provided vector of the user's preferences and a matrix of ratings by other users, use collaborative filtering to compute and return a list of the k movie indices with the highest recommendation score that the user hasn't seen. For starter mode, you will implement and use item-item collaborative filtering, with cosine similarity and no rating normalization.
+`recommend(user_ratings, ratings, k)`: This function should:
+- Input the **provided vector of the user's preferences** and a **pre-processed matrix of ratings by other users** (See the following section for details on pre-processing)
+- Use collaborative filtering to **compute and return** a list of the **k movie indices** with the highest recommendation score that the user hasn't seen. 
+- For starter mode, you will implement and use item-item collaborative filtering, with **cosine similarity** and **NO rating normalization**.
 
-`binarize(ratings, threshold)`: Binarizes the ratings matrix by replacing all entries above the threshold with 1 and all entries below the threshold with -1 (entries that are 0 should stay as 0). This function is called at the beginning of init and you will be working with a binarized ratings matrix for the rest of the assignment.
+`binarize(ratings, threshold)`: Binarizes the ratings matrix (for more details, see the [movie database section](#your-movie-database-movielens)). This function should:
+- Replace all entries **above the threshold** with **1**
+- Replace all entries **below the threshold** with **-1**
+- Leave entries that are 0 as 0
+- Be called at the **beginning of init** 
+    - You will be working with a binarized ratings matrix for the rest of the assignment!
 
-These functions will be tested by the autograder, so make sure you implement them correctly! The starter code includes a sanity check script that runs some basic tests on these functions to help you debug them. We recommend you explore these and other function stubs provided in the starter code and call them in process as appropriate.
+These functions will be tested by the autograder, so make sure you implement them correctly! The starter code includes a sanity check script that runs some basic tests on these functions to help you debug them. Once you've debugged locally, we **highly reccomend** you submit to Gradescope to test these with the autograder. 
 
-Once you have implemented the above functions, you can integrate them into `process(line)` to craft a response for a given input. Unlike the autograder, your users won't be able to read the output of the helper functions above to tell if you extracted the right sentiment and movie title. To give them a chance to correct you, your bot is required to echo the sentiment and the movie title that it extracts from the user’s input. You can do this creatively; see the example above for one possibility. If you don’t echo this information, you cannot get maximum points for title extraction and sentiment extraction.
+We advise that you explore these and other function stubs provided in the starter code and call them in process as appropriate.
 
-There are many different ways to implement modules (2) and (3) for the chatbot. Read the [rubric](https://docs.google.com/spreadsheets/d/1xZav671Cfg5KDyl7sJWQFoAs_NTLpaffXgpjyYfV06c/edit?usp=sharing) carefully to see the functionality that will be evaluated, and implement that first! The next two sections give you information on the data provided in the starter code.
+### Combining your functions in `process(line)`
+Once you have implemented the above functions, you can integrate them into `process(line)`, which crafts a response for a given input. 
+
+Unlike the autograder, your users won't be able to read the output of the helper functions above to tell if you extracted the right sentiment and movie title. To give them a chance to correct you, your bot is **required** to echo the sentiment and the movie title that it extracts from the user’s input. You can do this creatively; see the example above for one possibility. **If you don’t echo this information, you cannot get maximum points for title extraction and sentiment extraction.**
+
+There are many different ways to implement modules (2) (extracting relevant information from the input) and (3) (crafting relevant information into a response) for the chatbot. Read the [rubric](https://docs.google.com/spreadsheets/d/1v1f4moRUXAmA3zzjgaBIiq-LJTgaSBCHbWTZvDta808/edit?usp=sharing) carefully to see the functionality that will be evaluated, and implement that first! The next two sections give you information on the data provided in the starter code.
 
 # Your movie database: MovieLens
 The data comes from [MovieLens](https://movielens.org/) and consists of a total of 9125 movies rated by 671 users The starter code provides a 9125 x 671 utility matrix that contains ratings for users and movies. The ratings range anywhere from 1.0 to 5.0 with increments of 0.5. For starter mode, you will implement binarize method and use it to binarize the ratings as follows:
@@ -147,6 +209,8 @@ You can also run all the scripts with the following commands:
     sh run_all_scripts.sh
 You should check the outputted transcripts to make sure that your chatbot doesn't crash or fail incoherently. We will not be grading on these exact scripts (nor do the given test scripts cover all the requirements given in the rubric), but the method of running scripts will be used. Feel free to add your own test scripts as well! If you do, don't forget to add :quit as your last line or else the script will never terminate.
 
+**Note:** passing locally does **NOT** guarantee that you will pass the autograder, so please submit **early and often**!!
+
 # Printing debug info
 The debug method in the Chatbot class can be used to print out debug information about the internal state of the chatbot that you may consider relevant, in a way that is easy to understand. This is helpful while developing the assignment, but will not be graded. To enable debug info, type in the chatbot session in the REPL
 
@@ -164,7 +228,7 @@ To ensure your recommend function's output matches the autograder's, make sure t
 We encourage you to use numpy for this assignment. [np.dot](https://docs.scipy.org/doc/numpy/reference/generated/numpy.dot.html), [np.linalg.norm](https://docs.scipy.org/doc/numpy/reference/generated/numpy.linalg.norm.html), and [np.where](https://docs.scipy.org/doc/numpy/reference/generated/numpy.where.html) may be especially helpful.
 
 # Creative Mode (45 points)
-After you have implemented the movie recommendation chatbot in the starter mode, it is time to switch to creative mode! In creative mode your chatbot can be a better movie recommender system, but you can also take it in a different direction if you want to. This time the user will challenge the chatbot with unexpected input and evaluate it on different advanced capabilities. Refer to the [rubric](https://docs.google.com/spreadsheets/d/1xZav671Cfg5KDyl7sJWQFoAs_NTLpaffXgpjyYfV06c/edit?usp=sharing) to see how the chatbot will be evaluated, which will give you ideas about capabilities you can implement. There are 76 points worth of features to choose from, out of which 45 will be counted. (So if you implement 60 points worth of features, your score on this section will be capped at 45.)
+After you have implemented the movie recommendation chatbot in the starter mode, it is time to switch to creative mode! In creative mode your chatbot can be a better movie recommender system, but you can also take it in a different direction if you want to. This time the user will challenge the chatbot with unexpected input and evaluate it on different advanced capabilities. Refer to the [rubric](https://docs.google.com/spreadsheets/d/1v1f4moRUXAmA3zzjgaBIiq-LJTgaSBCHbWTZvDta808/edit#gid=0) to see how the chatbot will be evaluated, which will give you ideas about capabilities you can implement. There are 78 points worth of features to choose from, out of which 45 will be counted. (So if you implement 60 points worth of features, your score on this section will be capped at 45.)
 
 In rubric.txt, you must mark all the functionality you implemented in creative mode, which you can do by replacing the "NO" with "YES" in the desired lines. Requirements marked as "NO" will not be graded.
 
@@ -201,7 +265,16 @@ Note: To avoid problems with submission, please make sure that the names of your
 Also included in `rubric.txt` is an ethics question that we would like you to answer about Chatbots. It is worth 2 points!
 
 ## Evaluation
-The TAs will grade your submission with respect to the [rubric](https://docs.google.com/spreadsheets/d/1xZav671Cfg5KDyl7sJWQFoAs_NTLpaffXgpjyYfV06c/edit?usp=sharing) by providing your chatbot with a standardized series of inputs. There are 136 points total in the rubric: 60 points for starter mode features, and 76 points to choose from among the creative mode features, out of which you can earn at most 45 points. You can also earn 2 points from the ethics question in `rubric.txt`. You will need 97 points (95 from some combination of starter and creative components, 2 from the ethics question) for full credit, and up to 10 additional points will count as extra credit.
+The TAs will grade your submission with respect to the [rubric](https://docs.google.com/spreadsheets/d/1v1f4moRUXAmA3zzjgaBIiq-LJTgaSBCHbWTZvDta808/edit#gid=0) by providing your chatbot with a standardized series of inputs. 
+
+There are 136 points total in the rubric: 
+- 60 points for starter mode features
+- 76 points to choose from among the creative mode features, out of which you can earn at most 45 points
+- 2 points from the ethics question in `rubric.txt`. 
+
+You will need 97 points (95 from some combination of starter and creative components, 2 from the ethics question) for full credit. Note: although you can choose which creative components to implement, the ethics question **is required**.
+
+Up to **10 additional points** will count as **extra credit**.
 
 ## Submitting Your Solution
 Submit your assignment via Gradescope (www.gradescope.com). We expect the following files in your final submission:
@@ -220,4 +293,5 @@ Alternatively, if you don't submit a deps folder, you're also welcome to directl
 
 We are enabling group submission. After you submit the required files, you'll see "Add Group Member" in the top right of the Autograder Results page. Please add the group members you worked with (you may add up to 3). Note that only one group member needs to actually upload the submission to Gradescope.
 
-The autograder will test and grade each function in the [rubric](https://docs.google.com/spreadsheets/d/1xZav671Cfg5KDyl7sJWQFoAs_NTLpaffXgpjyYfV06c/edit?usp=sharing) except process, which the TAs will be grading manually. The TAs will only manually grade creative features you marked in your rubric.txt, and as a reminder to do so we included a 1-point check in the autograder ("Part 0"); if it gives you a 0.0/1.0, that means your rubric.txt hasn't been edited properly. Your full score will be released after the TAs finish grading your submission.
+### Autograding vs Manual grading
+The autograder will test and grade each function in the [rubric](https://docs.google.com/spreadsheets/d/1v1f4moRUXAmA3zzjgaBIiq-LJTgaSBCHbWTZvDta808/edit#gid=0) except process, which the TAs will be grading manually. The TAs will only manually grade creative features you marked in your rubric.txt, and as a reminder to do so we included a 1-point check in the autograder ("Part 0"); if it gives you a 0.0/1.0, that means your rubric.txt hasn't been edited properly. Your full score will be released after the TAs finish grading your submission.
