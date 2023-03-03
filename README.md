@@ -167,7 +167,7 @@ We've decomposed some of the core logic for you. You will need to implement the 
 
 `binarize(ratings, threshold)`: Binarizes the ratings matrix (for more details, see the [movie database section](#your-movie-database-movielens)). This function should:
 - Replace all entries **above the threshold** with **1**
-- Replace all entries **below the threshold** with **-1**
+- Replace all entries **below or equal to the threshold** with **-1**
 - Leave entries that are 0 as 0
 - Be called at the **beginning of init** 
     - You will be working with a binarized ratings matrix for the rest of the assignment!
