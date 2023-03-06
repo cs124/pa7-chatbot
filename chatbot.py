@@ -7,6 +7,8 @@ import util
 
 import numpy as np
 
+# Brandon
+
 
 # noinspection PyMethodMayBeStatic
 class Chatbot:
@@ -15,15 +17,15 @@ class Chatbot:
     def __init__(self, creative=False):
         # The chatbot's default name is `moviebot`.
         # TODO: Give your chatbot a new name.
-        self.name = 'moviebot'
+        self.name = "moviebot"
 
         self.creative = creative
 
         # This matrix has the following shape: num_movies x num_users
         # The values stored in each row i and column j is the rating for
         # movie i by user j
-        self.titles, ratings = util.load_ratings('data/ratings.txt')
-        self.sentiment = util.load_sentiment_dictionary('data/sentiment.txt')
+        self.titles, ratings = util.load_ratings("data/ratings.txt")
+        self.sentiment = util.load_sentiment_dictionary("data/sentiment.txt")
 
         ########################################################################
         # TODO: Binarize the movie ratings matrix.                             #
@@ -162,7 +164,7 @@ class Chatbot:
         return []
 
     def find_movies_by_title(self, title):
-        """ Given a movie title, return a list of indices of matching movies.
+        """Given a movie title, return a list of indices of matching movies.
 
         - If no movies are found that match the given title, return an empty
         list.
@@ -389,7 +391,7 @@ class Chatbot:
         NOTE: Pass the debug information that you may think is important for
         your evaluators.
         """
-        debug_info = 'debug info'
+        debug_info = "debug info"
         return debug_info
 
     ############################################################################
@@ -410,7 +412,6 @@ class Chatbot:
         """
 
 
-if __name__ == '__main__':
-    print('To run your chatbot in an interactive loop from the command line, '
-          'run:')
-    print('    python3 repl.py')
+if __name__ == "__main__":
+    print("To run your chatbot in an interactive loop from the command line, " "run:")
+    print("    python3 repl.py")
