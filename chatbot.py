@@ -311,8 +311,17 @@ class Chatbot:
 
         # The starter code returns a new matrix shaped like ratings but full of
         # zeros.
-        binarized_ratings = np.zeros_like(ratings)
 
+        # Passing ratings array by value, right? Will this work if by reference?
+        # If not, move binarized_ratings = ratings above.
+        # Will this replace ratings elements with int -1 and 1, or will they be
+        # automatically cast to floats to agree with what's already in the array?
+        # Will this cause a problem?
+ 
+        ratings[np.logical_and(ratings >= 0.5, ratings <= threshold)] = -1
+        ratings[ratings > threshold] = 1
+        binarized_ratings = ratings.astype(int)
+        
         ########################################################################
         #                        END OF YOUR CODE                              #
         ########################################################################
@@ -331,7 +340,7 @@ class Chatbot:
         ########################################################################
         # TODO: Compute cosine similarity between the two vectors.             #
         ########################################################################
-        similarity = 0
+        similarity = np.dot(u, v)/(np.norm(u) * np.norm(v))
         ########################################################################
         #                          END OF YOUR CODE                            #
         ########################################################################
@@ -374,6 +383,17 @@ class Chatbot:
         ########################################################################
 
         # Populate this list with k movie indices to recommend to the user.
+        
+        # Note to self:
+        # For movie index with rating 0 (not seen) in user_ratings, 
+        # Find the predicted rating for that movie and put in a dictionary of 
+        # format "movie-index: score"
+        # Prediction using item-item collaboratve filtering
+        # 
+        # Sort dictionary keys list by the value of score, reverse=True
+        # For the first k in that list of indices, append those to
+        # to the recommendation list. 
+
         recommendations = []
 
         ########################################################################
