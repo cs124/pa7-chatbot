@@ -137,7 +137,7 @@ class Chatbot:
         ########################################################################
         #                             END OF YOUR CODE                         #
         ########################################################################
-
+        
         return text
 
     def extract_titles(self, preprocessed_input):
@@ -204,6 +204,35 @@ class Chatbot:
         pre-processed with preprocess()
         :returns: a numerical value for the sentiment of the text
         """
+        negations = []
+        punctuations = []
+        sentiment = 0
+        negated_input = []
+        for word in preprocessed_input:
+            if word in negations:
+                
+            if 
+
+        coeff = 1 
+        for word in preprocessed_input:
+            if word in negations:
+              coeff *= -1            
+            elif word in punctuations: 
+               coeff = 1
+            elif word in self.sentiment:
+                if self.sentiment[word] == "pos":
+                    sentiment += coeff * 1
+                else:
+                    sentiment -= coeff * 1
+            else:
+                continue
+            
+        if sentiment < 0:
+            return -1
+        if sentiment > 0:
+            return 1
+        return 0
+        
         return 0
 
     def extract_sentiment_for_movies(self, preprocessed_input):
@@ -227,6 +256,7 @@ class Chatbot:
         :returns: a list of tuples, where the first item in the tuple is a movie
         title, and the second is the sentiment in the text toward that movie
         """
+        self.extract_titles()
         pass
 
     def find_movies_closest_to_title(self, title, max_distance=3):
@@ -252,7 +282,6 @@ class Chatbot:
         :returns: a list of movie indices with titles closest to the given title
         and within edit distance max_distance
         """
-
         pass
 
     def disambiguate(self, clarification, candidates):
