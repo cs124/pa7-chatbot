@@ -394,7 +394,25 @@ class Chatbot:
         # For the first k in that list of indices, append those to
         # to the recommendation list. 
 
+        # For each index with rating not 0 in user_ratings
+        zeroes_indices =  np.where(user_ratings == 0)[0]
+        nz_indices = np.nonzero(user_ratings)[0]
+        ratings = {}
+        for i in zeroes_indices:
+            total_rating = 0.0
+            for j in nz_indices:
+                # Rating of the user on item j
+                r_j = user_ratings[j] 
+                # Is this self syntax right?
+                s_ij = self.similarity(ratings_matrix[j, :], ratings_matrix[i, :])
+                total_rating += r_j * s_ij
+            ratings[i] = total_rating
+        ranked = sorted(ratings.keys(), key=lambda x:ratings[x], reverse=True)
         recommendations = []
+        for i in range(k):
+            if i >= k:
+                break
+            recommendations.append(ranked[i])
 
         ########################################################################
         #                        END OF YOUR CODE                              #
