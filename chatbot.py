@@ -6,6 +6,7 @@
 import util
 
 import numpy as np
+import re 
 
 # Brandon
 # Grace
@@ -27,7 +28,7 @@ class Chatbot:
         # movie i by user j
         self.titles, ratings = util.load_ratings("data/ratings.txt")
         self.sentiment = util.load_sentiment_dictionary("data/sentiment.txt")
-
+        
         ########################################################################
         # TODO: Binarize the movie ratings matrix.                             #
         ########################################################################
@@ -111,6 +112,36 @@ class Chatbot:
         return response
 
     @staticmethod
+    def tolist(text):
+        # 3.4 
+        # Note that punctuations may come in sequence, e.g. "Wtf was this movie!!? blah blah blah" 
+        # Take care of this by replacing sequences of puncs with singles
+
+        # Would it be better just to do this all with a regex? 
+
+        punctuations = ['!', ',', '.']
+        for punc in punctuations:
+            # No need to consider when punctuations is at end of string. Ignore
+            # If actual punctuation marking an end of a clause (and not some other use)
+            # it will (hopefully) be followed by a space or the end of the string.
+            # Here we take care of the first case.
+            
+            # For each instance found of punc, if a punctuation mark is followed by a space
+            # or by a sequence of punctuation marks then a space, change this to
+            # "{space}{single punctuation}{space}"
+
+            # Later take care of the case where the end of string is reached (e.g. punc
+            # or punc sequence at end of string will not be followed by a space but 
+            # still be separated from the last word)
+            
+            text.replace(punc + " ", " " + punc + " ")
+        newlist = text.split(" ")
+        # Last in newlist may be in form "word" + "punctuation", take care of this
+        if newlist[-1][-1] in punctuations:
+
+
+
+
     def preprocess(text):
         """Do any general-purpose pre-processing before extracting information
         from a line of text.
@@ -162,7 +193,15 @@ class Chatbot:
         pre-processed with preprocess()
         :returns: list of movie titles that are potentially in the text
         """
-        return []
+        result = []
+        capture_quotes = '(?:[^"]*)"([^"]+)+"(?:[^"]*)'
+        input_str = ""
+        for item in preprocessed_input:
+            input_str += item
+        found_movies = re.search(capture_quotes, input_str)
+        for i in range(len(found_movies)):
+            result.append(found_movies.group(i))
+        return result
 
     def find_movies_by_title(self, title):
         """Given a movie title, return a list of indices of matching movies.
@@ -205,14 +244,15 @@ class Chatbot:
         :returns: a numerical value for the sentiment of the text
         """
         negations = []
-        punctuations = []
+        punctuations = [",", "!", "."]
         sentiment = 0
         negated_input = []
-        for word in preprocessed_input:
-            if word in negations:
-                
-            if 
+        # If preprocessed_input is not yet in the form of a list:
 
+        # Added helper function, how to
+        input_list = self.tolist(preprocessed_input) 
+
+        #####################################################
         coeff = 1 
         for word in preprocessed_input:
             if word in negations:
