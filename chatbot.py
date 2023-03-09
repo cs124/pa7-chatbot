@@ -116,7 +116,8 @@ class Chatbot:
         # 3.4 
         # Note that punctuations may come in sequence, e.g. "Wtf was this movie!!? blah blah blah" 
         # Take care of this by replacing sequences of puncs with singles
-
+        token_list = re.findall(r'\b\w+\b|[!.,](?!\d)', text)
+        return token_list
         # Would it be better just to do this all with a regex? 
 
         punctuations = ['!', ',', '.']
