@@ -76,7 +76,7 @@ def call_llm(messages, client, model="meta-llama/Llama-2-70b-chat-hf", max_token
 
     return chat_completion.choices[0].message.content
 
-def stream_llm_to_console(messages, client, model="meta-llama/Llama-2-70b-chat-hf", max_tokens=100):
+def stream_llm_to_console(messages, client, model="meta-llama/Llama-2-70b-chat-hf", max_tokens=256):
     stream = client.chat.completions.create(
         model=model,
         messages=messages,
