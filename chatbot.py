@@ -1,7 +1,8 @@
 # PA7, CS124, Stanford
-# v.1.0.4
+# v.1.1.0
 #
 # Original Python code by Ignacio Cases (@cases)
+# Update: 2024-01: Added the ability to run the chatbot as LLM interface (@mryan0)
 ######################################################################
 import util
 
@@ -10,7 +11,7 @@ import numpy as np
 
 # noinspection PyMethodMayBeStatic
 class Chatbot:
-    """Simple class to implement the chatbot for PA 6."""
+    """Simple class to implement the chatbot for PA 7."""
 
     def __init__(self, creative=False):
         # The chatbot's default name is `moviebot`.
@@ -66,6 +67,23 @@ class Chatbot:
         #                          END OF YOUR CODE                            #
         ########################################################################
         return goodbye_message
+    
+    def llm_system_prompt(self):
+        """
+        Return the system prompt used to guide the LLM chatbot conversation.
+        """
+        ########################################################################
+        # TODO: Write a system prompt message for the LLM chatbot              #
+        ########################################################################
+
+        system_prompt = """Your name is moviebot. You are a movie recommender chatbot. """ +\
+        """You can help users find movies they like and provide information about movies."""
+
+        ########################################################################
+        #                          END OF YOUR CODE                            #
+        ########################################################################
+
+        return system_prompt
 
     ############################################################################
     # 2. Modules 2 and 3: extraction and transformation                        #
@@ -400,7 +418,10 @@ class Chatbot:
 
         Consider adding to this description any information about what your
         chatbot can do and how the user can interact with it.
+
+        NOTE: This string will not be shown to the LLM in llm mode, this is just for the user
         """
+
         return """
         Your task is to implement the chatbot as detailed in the PA7
         instructions.

@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 
 # PA7, CS124, Stanford
-# v.1.0.4
+# v.1.1.0
 #
 # Original Python code by Ignacio Cases (@cases)
+# Update: 2024-01: Added the ability to run the chatbot as LLM interface (@mryan0)
 #
 # See: https://docs.python.org/3/library/cmd.html
 ######################################################################
@@ -19,6 +20,7 @@ logger = logging.getLogger(__name__)
 # logger.setLevel(logging.DEBUG)
 
 from chatbot import Chatbot
+from util import load_together_client, stream_llm_to_console
 
 # Modular ASCII font from http://patorjk.com/software/taag/
 HEADER = """Welcome to Stanford CS124's
@@ -51,7 +53,7 @@ class REPL(cmd.Cmd):
     undoc_header = ''
     ruler = '-'
 
-    def __init__(self, creative=False):
+    def __init__(self, creative=False, llm=False):
         super().__init__()
 
         self.chatbot = Chatbot(creative=creative)
@@ -63,6 +65,17 @@ class REPL(cmd.Cmd):
                      self.greeting
         self.debug = False
         self.debug_chatbot = False
+
+        self.llm = llm
+        self.llm_history = [{
+            "role": "system",
+            "content": self.chatbot.llm_system_prompt(),
+            },
+            {
+                "role": "assistant",
+                "content": self.greeting,
+            }]
+        self.llm_client = load_together_client()
 
     def cmdloop(self, intro=None):
         logger.debug('cmdloop(%s)', intro)
@@ -93,6 +106,8 @@ class REPL(cmd.Cmd):
         # Stop processing commands if the user enters :quit
         if line == ":quit":
             return True
+        elif self.llm:
+            self.process_llm(line)
         else:
             response = self.chatbot.process(line)
             print(self.bot_says(response))
@@ -135,11 +150,27 @@ class REPL(cmd.Cmd):
         Now it's your turn! """
         print(story)
 
+    def process_llm(self, line):
+        self.llm_history.append({
+            "role": "user",
+            "content": line,
+        })
+        print(self.bot_says(''), end="")
+        response = stream_llm_to_console(
+            messages=self.llm_history,
+            client=self.llm_client,
+        )
+        self.llm_history.append({
+            "role": "assistant",
+            "content": response,
+        })
 
 def process_command_line():
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument('--creative', dest='creative', action='store_true',
                         default=False, help='Enables creative mode')
+    parser.add_argument('--llm', dest='llm', action='store_true',
+                        default=False, help='Enables LLM mode')
     args = parser.parse_args()
     return args
 
@@ -175,5 +206,5 @@ if __name__ == '__main__':
     # END TESTING CODE      #
     #########################
     args = process_command_line()
-    repl = REPL(creative=args.creative)
+    repl = REPL(creative=args.creative, llm=args.llm)
     repl.cmdloop()

@@ -8,6 +8,7 @@ import csv
 from typing import Tuple, List, Dict
 
 import numpy as np
+from openai import OpenAI
 
 
 def load_ratings(src_filename, delimiter: str = '%',
@@ -56,3 +57,38 @@ def load_sentiment_dictionary(src_filename: str, delimiter: str = ',',
         if header:
             next(reader)
         return dict(reader)
+
+def load_together_client():
+    from api_keys import TOGETHER_API_KEY
+
+    together_client = OpenAI(api_key=TOGETHER_API_KEY,
+        base_url='https://api.together.xyz',
+    )
+
+    return together_client
+
+def call_llm(messages, client, model="meta-llama/Llama-2-70b-chat-hf", max_tokens=100):
+    chat_completion = client.chat.completions.create(
+        messages=messages,
+        model=model,
+        max_tokens=max_tokens
+    )
+
+    return chat_completion.choices[0].message.content
+
+def stream_llm_to_console(messages, client, model="meta-llama/Llama-2-70b-chat-hf", max_tokens=100):
+    stream = client.chat.completions.create(
+        model=model,
+        messages=messages,
+        stream=True,
+        max_tokens=max_tokens
+    )
+
+    response = ""
+    for chunk in stream:
+        response += chunk.choices[0].delta.content or ""
+        print(chunk.choices[0].delta.content or "", end="", flush=True)
+
+    print()
+
+    return response
