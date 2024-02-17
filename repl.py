@@ -25,7 +25,7 @@ from util import load_together_client, stream_llm_to_console
 # Modular ASCII font from http://patorjk.com/software/taag/
 HEADER = """Welcome to Stanford CS124's
  _______  _______       ___________
-|       ||   _   |      \          \
+|       ||   _   |      \          \\
 |    _  ||  |_|  | ____  ------    /
 |   |_| ||       ||____|      /   /
 |    ___||       |           /   /       

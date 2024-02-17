@@ -133,8 +133,8 @@ class Chatbot:
         Given an input line of text, this method should do any general
         pre-processing and return the pre-processed string. The outputs of this
         method will be used as inputs (instead of the original raw text) for the
-        extract_titles, extract_sentiment, and extract_sentiment_for_movies
-        methods.
+        extract_titles, extract_sentiment, extract_sentiment_for_movies, and
+        extract_emotion methods.
 
         Note that this method is intentially made static, as you shouldn't need
         to use any attributes of Chatbot in this method.
@@ -154,6 +154,42 @@ class Chatbot:
         ########################################################################
 
         return text
+    
+    def extract_emotion(self, preprocessed_input):
+        """CREATIVE MODE: Extract an emotion from a line of pre-processed text.
+        
+        Given an input text which has been pre-processed with preprocess(),
+        this method should return a list representing the emotion in the text.
+        
+        We use the following emotions for simplicity:
+        Anger, Disgust, Fear, Happiness, Sadness and Surprise
+        based on early emotion research from Paul Ekman.  Note that Ekman's
+        research was focused on facial expressions, but the simple emotion
+        categories are useful for our purposes.
+
+        Example Inputs:
+            Input: "Your recommendations are making me so frustrated!"
+            Output: ["Anger"]
+
+            Input: "Wow! That was not a recommendation I expected!"
+            Output: ["Surprise"]
+
+            Input: "Ugh that movie was so gruesome!  Stop making stupid recommendations!"
+            Output: ["Disgust", "Anger"]
+
+        Example Usage:
+            emotion = chatbot.extract_emotion(chatbot.preprocess(
+                "Your recommendations are making me so frustrated!"))
+            print(emotion) # prints ["Anger"]
+
+        :param preprocessed_input: a user-supplied line of text that has been
+        pre-processed with preprocess()
+
+        :returns: a list of 6 integers, each representing the presence of an
+        emotion in the text. 1 indicates the presence of the emotion, 0 indicates
+        the absence of the emotion.
+        """
+        return []
 
     def extract_titles(self, preprocessed_input):
         """Extract potential movie titles from a line of pre-processed text.

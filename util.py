@@ -5,7 +5,9 @@ Ported to Python 3 by Matt Mistele (@mmistele) and Sam Redmond (@sredmond).
 Intended for PA7 in Stanford's CS124.
 """
 import csv
+import json
 from typing import Tuple, List, Dict
+from functools import lru_cache
 
 import numpy as np
 from openai import OpenAI
@@ -58,6 +60,7 @@ def load_sentiment_dictionary(src_filename: str, delimiter: str = ',',
             next(reader)
         return dict(reader)
 
+@lru_cache
 def load_together_client():
     from api_keys import TOGETHER_API_KEY
 
@@ -67,7 +70,7 @@ def load_together_client():
 
     return together_client
 
-def call_llm(messages, client, model="meta-llama/Llama-2-70b-chat-hf", max_tokens=100):
+def call_llm(messages, client, model="mistralai/Mixtral-8x7B-Instruct-v0.1", max_tokens=256):
     chat_completion = client.chat.completions.create(
         messages=messages,
         model=model,
@@ -76,7 +79,8 @@ def call_llm(messages, client, model="meta-llama/Llama-2-70b-chat-hf", max_token
 
     return chat_completion.choices[0].message.content
 
-def stream_llm_to_console(messages, client, model="meta-llama/Llama-2-70b-chat-hf", max_tokens=256):
+# model = "meta-llama/Llama-2-70b-chat-hf"
+def stream_llm_to_console(messages, client, model="mistralai/Mixtral-8x7B-Instruct-v0.1", max_tokens=256):
     stream = client.chat.completions.create(
         model=model,
         messages=messages,
@@ -92,3 +96,55 @@ def stream_llm_to_console(messages, client, model="meta-llama/Llama-2-70b-chat-h
     print()
 
     return response
+
+### Student Facing API
+# Makes a call to the Together API using the given system prompt and user message.
+#   system_prompt: The system prompt to send to the API.
+#   message: The user message to send to the API.
+#   model: The model to use for the API call.
+#   max_tokens: The maximum number of tokens to generate in the response.
+# Returns the response from the API.
+def simple_llm_call(system_prompt, message, model="mistralai/Mixtral-8x7B-Instruct-v0.1", max_tokens=256):
+    client = load_together_client()
+    chat_completion = client.chat.completions.create(
+        messages=[{
+            "role": "system",
+            "content": system_prompt,
+        }, {
+            "role": "user",
+            "content": message,
+        }],
+        model=model,
+        max_tokens=max_tokens
+    )
+
+    return chat_completion.choices[0].message.content
+
+
+### Student Facing API
+# Makes a call to the Together API using the given system prompt and user message with JSON output formatting.
+#   system_prompt: The system prompt to send to the API.
+#   message: The user message to send to the API.
+#   json_class: The class to use for the JSON output.
+#   model: The model to use for the API call.
+#   max_tokens: The maximum number of tokens to generate in the response.
+# Returns the response from the API as a JSON object
+def json_llm_call(system_prompt, message, json_class, model="mistralai/Mixtral-8x7B-Instruct-v0.1", max_tokens=256):
+    client = load_together_client()
+    chat_completion = client.chat.completions.create(
+        messages=[{
+            "role": "system",
+            "content": system_prompt,
+        }, {
+            "role": "user",
+            "content": message,
+        }],
+        model=model,
+        max_tokens=max_tokens,
+        response_format = {
+            "type": "json_object",
+            "schema": json_class.model_json_schema(),
+        }
+    )
+
+    return json.loads(chat_completion.choices[0].message.content)
