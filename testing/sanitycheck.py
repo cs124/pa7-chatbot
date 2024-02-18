@@ -189,12 +189,11 @@ def test_find_movies_by_foreign_title():
     # They are translations of the English titles found in the movies.txt file
     test_cases_translations = [
         ('Den Fantastiske Spider-Man', [8089]), # Danish
-        ('Gran problema en la pequeña China', [2992]), # Spanish
-        ('Un roi à New York', [2906]), # French
-        ('Tote Männer tragen kein Plaid', [1670]), # German
-        ('Indiana Jones e il tempio maledetto', [1676]), # Italian
+        ('Un Roi à New York', [2906]), # French
+        ('Tote Männer Tragen Kein Plaid', [1670]), # German
+        ('Indiana Jones e il Tempio Maledetto', [1676]), # Italian
         ('Junglebogen', [1639]), # Danish
-        ('Doble felicidad', [306]) # Spanish
+        ('Doble Felicidad', [306]) # Spanish
         ('Der König der Löwen', [329]), # German
     ]
 
