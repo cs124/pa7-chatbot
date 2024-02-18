@@ -242,10 +242,6 @@ class Chatbot:
         sentiment of the text is neutral (no sentiment detected), or +1 if the
         sentiment of the text is positive.
 
-        As an optional creative extension, return -2 if the sentiment of the
-        text is super negative and +2 if the sentiment of the text is super
-        positive.
-
         Example:
           sentiment = chatbot.extract_sentiment(chatbot.preprocess(
                                                     'I liked "The Titanic"'))
@@ -256,80 +252,6 @@ class Chatbot:
         :returns: a numerical value for the sentiment of the text
         """
         return 0
-
-    def extract_sentiment_for_movies(self, preprocessed_input):
-        """Creative Feature: Extracts the sentiments from a line of
-        pre-processed text that may contain multiple movies. Note that the
-        sentiments toward the movies may be different.
-
-        You should use the same sentiment values as extract_sentiment, described
-
-        above.
-        Hint: feel free to call previously defined functions to implement this.
-
-        Example:
-          sentiments = chatbot.extract_sentiment_for_text(
-                           chatbot.preprocess(
-                           'I liked both "Titanic (1997)" and "Ex Machina".'))
-          print(sentiments) // prints [("Titanic (1997)", 1), ("Ex Machina", 1)]
-
-        :param preprocessed_input: a user-supplied line of text that has been
-        pre-processed with preprocess()
-        :returns: a list of tuples, where the first item in the tuple is a movie
-        title, and the second is the sentiment in the text toward that movie
-        """
-        pass
-
-    def find_movies_closest_to_title(self, title, max_distance=3):
-        """Creative Feature: Given a potentially misspelled movie title,
-        return a list of the movies in the dataset whose titles have the least
-        edit distance from the provided title, and with edit distance at most
-        max_distance.
-
-        - If no movies have titles within max_distance of the provided title,
-        return an empty list.
-        - Otherwise, if there's a movie closer in edit distance to the given
-        title than all other movies, return a 1-element list containing its
-        index.
-        - If there is a tie for closest movie, return a list with the indices
-        of all movies tying for minimum edit distance to the given movie.
-
-        Example:
-          # should return [1656]
-          chatbot.find_movies_closest_to_title("Sleeping Beaty")
-
-        :param title: a potentially misspelled title
-        :param max_distance: the maximum edit distance to search for
-        :returns: a list of movie indices with titles closest to the given title
-        and within edit distance max_distance
-        """
-
-        pass
-
-    def disambiguate(self, clarification, candidates):
-        """Creative Feature: Given a list of movies that the user could be
-        talking about (represented as indices), and a string given by the user
-        as clarification (eg. in response to your bot saying "Which movie did
-        you mean: Titanic (1953) or Titanic (1997)?"), use the clarification to
-        narrow down the list and return a smaller list of candidates (hopefully
-        just 1!)
-
-        - If the clarification uniquely identifies one of the movies, this
-        should return a 1-element list with the index of that movie.
-        - If it's unclear which movie the user means by the clarification, it
-        should return a list with the indices it could be referring to (to
-        continue the disambiguation dialogue).
-
-        Example:
-          chatbot.disambiguate("1997", [1359, 2716]) should return [1359]
-
-        :param clarification: user input intended to disambiguate between the
-        given movies
-        :param candidates: a list of movie indices
-        :returns: a list of indices corresponding to the movies identified by
-        the clarification
-        """
-        pass
 
     ############################################################################
     # 3. Movie Recommendation helper functions                                 #

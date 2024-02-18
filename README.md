@@ -4,9 +4,15 @@
 
 **You must work in groups of 3-4 members (To work in a group of size 2, you must get special permission from the staff). All submissions will be graded according to the same criteria, regardless of group size.**
 
-In this assignment you will build a chatbot somewhat like the chatbot ELIZA that you saw in the lecture. You will work on a simpler, single-agent version first, and then choose from a set of advanced features to get more points. **A score of 97 points is considered full credit (95 from chatbot functionality + 2 from ethics questions), and you can get up to 10 additional points in extra credit.**
+In this assignment you will build a chatbot somewhat like the chatbot ELIZA that you saw in the lecture. You will work on a simpler, single-agent version first, and then choose from a set of advanced features to get more points. **A score of 85 points for the coding portion is considered full credit (61 Starter + 8 LLM + 16 Creative).  For LLM and Creative mode you will choose which of the parts to implement.  You must implement the full starter mode.**
 
-To get you started, we will guide you in the implementation of a chatbot that can recommend movies to the user – this will be referred to as the **starter** mode. After you have implemented the movie-recommender chatbot, you will switch to a **creative** mode and implement an interesting extension of the movie recommender, or something totally new. Be creative, and have fun!
+To get you started, we will guide you in the implementation of a chatbot that can recommend movies to the user – this will be referred to as the **starter** mode. After you have implemented the movie-recommender chatbot, we will try to replicate the bot you wrote by prompting a Large Language Model (LLM) by running your bot in **llm** mode.  Finally you will switch to a **creative** mode which allows you to use both your own code and LLM calls to implement an interesting extension of the movie recommender. Be creative, and have fun!
+
+PA7 Has 4 Submission Components on Gradescope.  Make sure you complete them all!
+ - PA7 Group Work Form (3 Points)
+ - PA7 Coding (79 Points)
+ - PA7 User Testing (5 Points)
+ - PA7 Reflection (5 points)
 
 ## Contents of this file!
 This is a big file! Here are the main sections:
@@ -92,7 +98,7 @@ This will useful when you want to test the same script multiple times. We will b
 ## Customizing your chatbot
 All the code that you will need to write for this assignment will be in `chatbot.py`. Open that file and follow the instructions there to change the name of the chatbot, the greeting message, and the goodbye message. You can change your chatbot’s name now!
 
-# Starter Mode (60 points)
+# Starter Mode (61 points)
 In starter mode, your chatbot will help the user by giving movie recommendations. It will ask the user to say something about movies they have liked, and it will come up with a recommendation based on those data points. The user of the chatbot in starter mode will follow its instructions, so you will deal with fairly restricted input. Specifically, you can assume:
 - **Movie names** will come in **quotation marks**
 - **Expressions of sentiment** will be **simple**
@@ -105,7 +111,7 @@ Here is an example of how this might go:
 The bot gets confused because it expects quotation marks.
 
     moviebot> Sorry, I don't understand. Tell me about a movie that you have seen.
-    I really liked "Moneyball".
+    > I really liked "Moneyball".
     moviebot> You liked "Moneyball". Thank you! Tell me about another movie you have seen.
 The bot understands everything, so it echoes your sentiment. It’s a bit repetitive, though.
 
@@ -227,9 +233,11 @@ To ensure your recommend function's output matches the autograder's, make sure t
 
 We encourage you to use numpy for this assignment. [np.dot](https://docs.scipy.org/doc/numpy/reference/generated/numpy.dot.html), [np.linalg.norm](https://docs.scipy.org/doc/numpy/reference/generated/numpy.linalg.norm.html), and [np.where](https://docs.scipy.org/doc/numpy/reference/generated/numpy.where.html) may be especially helpful.
 
-# Creative Mode (45 points)
-After you have implemented the movie recommendation chatbot in the starter mode, it is time to switch to creative mode! In creative mode your chatbot can be a better movie recommender system, but you can also take it in a different direction if you want to. This time the user will challenge the chatbot with unexpected input and evaluate it on different advanced capabilities. Refer to the [rubric](https://docs.google.com/spreadsheets/d/1v1f4moRUXAmA3zzjgaBIiq-LJTgaSBCHbWTZvDta808/edit#gid=0) to see how the chatbot will be evaluated, which will give you ideas about capabilities you can implement. There are 72
-points worth of features to choose from, out of which 45 will be counted. (So if you implement 60 points worth of features, your score on this section will be capped at 45.)
+# LLM Mode (8 points)
+
+# Creative Mode (10 points)
+After you have implemented the movie recommendation chatbot in the starter mode, it is time to switch to creative mode! In creative mode your chatbot can be a better movie recommender system, but you can also take it in a different direction if you want to. This time the user will challenge the chatbot with unexpected input and evaluate it on different advanced capabilities. Refer to the [rubric](https://docs.google.com/spreadsheets/d/1v1f4moRUXAmA3zzjgaBIiq-LJTgaSBCHbWTZvDta808/edit#gid=0) to see how the chatbot will be evaluated, which will give you ideas about capabilities you can implement. There are 16
+points worth of features to choose from, out of which 10 will be counted. (So if you implement 16 points worth of features, your score on this section will be capped at 10.)
 
 In rubric.txt, you must mark all the functionality you implemented in creative mode, which you can do by replacing the "NO" with "YES" in the desired lines. Requirements marked as "NO" will not be graded.
 
@@ -261,9 +269,6 @@ Numpy is encouraged, but please do not assume other libraries that are not in th
 Although with the data provided you can be really creative, you are free to use the resources that you may want as long as they are integrated in the class chatbot.py. We will also optionally accept a file named PorterStemmer.py and a deps folder containing other files (we won't accept additional folders inside deps). The maximum size of all files that you will submit is strictly 100KB, so be careful if you add resources!
 
 Note: To avoid problems with submission, please make sure that the names of your files/folders exactly match the specifications above. That is, your optional deps folder must be named deps, and your optional PorterStemmer.py file must be named PorterStemmer.py. Both items (if included) must be in the same assignment directory with chatbot.py.
-
-## Ethics question
-Also included in `rubric.txt` is an ethics question that we would like you to answer about Chatbots. It is worth 2 points!
 
 ## Evaluation
 The TAs will grade your submission with respect to the [rubric](https://docs.google.com/spreadsheets/d/1v1f4moRUXAmA3zzjgaBIiq-LJTgaSBCHbWTZvDta808/edit#gid=0) by providing your chatbot with a standardized series of inputs. 

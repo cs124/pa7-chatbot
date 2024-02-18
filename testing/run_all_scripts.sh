@@ -81,6 +81,16 @@ main() {
         python3 ../repl.py < "${file}" &> "${TRANSCRIPT_FILE}"
     done
 
+    for file in test_scripts/llm/*; do
+        local TEST_ID="$(basename ${file} .txt)"
+        local TRANSCRIPT_PATH="${TRANSCRIPTS_DIR}/llm/"
+        local TRANSCRIPT_FILE="${TRANSCRIPT_PATH}${TEST_ID}.transcript"
+
+        echo "(LLM) Generating transcript for ${TEST_ID} in ${TRANSCRIPT_PATH}."
+
+        python3 ../repl.py --llm < "${file}" &> "${TRANSCRIPT_FILE}"
+    done
+
     for file in test_scripts/creative/*; do
         local TEST_ID="$(basename ${file} .txt)"
         local TRANSCRIPT_PATH="${TRANSCRIPTS_DIR}/creative/"

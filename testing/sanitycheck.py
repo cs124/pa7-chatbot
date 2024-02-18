@@ -49,7 +49,18 @@ def assert_list_equals(givenValue, correctValue, failureMessage,
         print("Expected: {}".format(correctValue))
         print("Actual: {}".format(givenValue))
         return False
-
+    
+def assert_list_contains_and_excludes(givenSet, correctSet, incorrectSet, failureMessage):
+    try:
+        assert set(givenSet).issuperset(correctSet)
+        assert set(givenSet).isdisjoint(incorrectSet)
+        return True
+    except AssertionError:
+        print(failureMessage)
+        print("Expected: {}".format(correctSet))
+        print("Actual: {}".format(givenSet))
+        print("Must not contain: {}".format(incorrectSet))
+        return False
 
 def assert_sign_equals(givenValue, correctValue, failureMessage):
     try:
@@ -158,6 +169,60 @@ def test_find_movies_by_title():
         print('find_movies_by_title() sanity check passed!')
     print()
 
+def test_find_movies_by_foreign_title():
+    print("Testing find_movies_by_title() foreign film functionality...")
+    chatbot = Chatbot(True)
+
+    # add more test cases here!!!
+    # These test cases are foreign titles listed in the movies.txt file
+    test_cases = [
+        ('La tigre e la neve', [6520]), # Italian
+        ('La science des rêves', [6523]), # French
+        ('Der siebente Kontinent', [6527]), # German
+        ('El Laberinto del fauno', [6537]), # Spanish
+        ('Il Decameron', [6592]), # Italian
+        ('Pelle erobreren', [3412]), # Danish
+        ('Goya en Burdeos', [3116]), # Spanish
+    ]
+
+    # These test cases are foreign titles not listed in the movies.txt file
+    # They are translations of the English titles found in the movies.txt file
+    test_cases_translations = [
+        ('Den Fantastiske Spider-Man', [8089]), # Danish
+        ('Gran problema en la pequeña China', [2992]), # Spanish
+        ('Un roi à New York', [2906]), # French
+        ('Tote Männer tragen kein Plaid', [1670]), # German
+        ('Indiana Jones e il tempio maledetto', [1676]), # Italian
+        ('Junglebogen', [1639]), # Danish
+        ('Doble felicidad', [306]) # Spanish
+        ('Der König der Löwen', [329]), # German
+    ]
+
+    tests_passed = True
+    for input_text, expected_output in test_cases:
+        if not assert_list_equals(
+                chatbot.find_movies_by_title(input_text),
+                expected_output,
+                "Incorrect output for find_movies_by_title('{}').".format(
+                    input_text),
+                orderMatters=False
+        ):
+            tests_passed = False
+    
+    for input_text, expected_output in test_cases_translations:
+        if not assert_list_equals(
+                chatbot.find_movies_by_title(input_text),
+                expected_output,
+                "Incorrect output for find_movies_by_title('{}').  Note this movie was a translation of an English title in the movies.txt file.".format(
+                    input_text),
+                orderMatters=False
+        ):
+            tests_passed = False
+
+    if tests_passed:
+        print('find_movies_by_title() foreign film title sanity check passed!')
+    print()
+
 
 def test_extract_sentiment():
     print("Testing extract_sentiment() functionality...")
@@ -189,127 +254,6 @@ def test_extract_sentiment():
     if tests_passed:
         print('extract_sentiment() sanity check passed!')
     print()
-
-
-def test_extract_sentiment_for_movies():
-    print("Testing test_extract_sentiment_for_movies() functionality...")
-    chatbot = Chatbot(True)
-
-    # add more test cases here!!!
-    test_cases = [
-        ('I liked both "I, Robot" and "Ex Machina".',
-         [("I, Robot", 1), ("Ex Machina", 1)]),
-        ('I liked "I, Robot" but not "Ex Machina".',
-         [("I, Robot", 1), ("Ex Machina", -1)]),
-        ('I didn\'t like either "I, Robot" or "Ex Machina".',
-         [("I, Robot", -1), ("Ex Machina", -1)]),
-        ('I liked "Titanic (1997)", but "Ex Machina" was not good.',
-         [("Titanic (1997)", 1), ("Ex Machina", -1)]),
-    ]
-
-    tests_passed = True
-    for input_text, expected_output in test_cases:
-        if not assert_list_equals(
-                chatbot.extract_sentiment_for_movies(
-                    chatbot.preprocess(input_text)),
-                expected_output,
-                "Incorrect output for extract_sentiment_for_movies("
-                "chatbot.preprocess('{}')).".format(
-                    input_text),
-                orderMatters=False
-        ):
-            tests_passed = False
-    if tests_passed:
-        print('extract_sentiment_for_movies() sanity check passed!')
-    print()
-
-
-def test_find_movies_closest_to_title():
-    print("Testing find_movies_closest_to_title() functionality...")
-    chatbot = Chatbot(True)
-
-    # add more test cases here!!!
-    test_cases = [
-        ('Sleeping Beaty', [1656]),
-        ('Te', [8082, 4511, 1664]),
-        ('BAT-MAAAN', [524, 5743]),
-        ('Blargdeblargh', []),
-    ]
-
-    tests_passed = True
-    for input_text, expected_output in test_cases:
-        if not assert_list_equals(
-                chatbot.find_movies_closest_to_title(input_text),
-                expected_output,
-                "Incorrect output for find_movies_closest_to_title("
-                "chatbot.preprocess('{}')).".format(
-                    input_text),
-                orderMatters=False
-        ):
-            tests_passed = False
-    if tests_passed:
-        print('find_movies_closest_to_title() sanity check passed!')
-    print()
-    return True
-
-
-def test_disambiguate():
-    print("Testing disambiguate() functionality...")
-    chatbot = Chatbot(True)
-
-    # add more test cases here!!!
-    test_cases = [
-        ('1997', [1359, 2716], [1359]),
-        ('2', [1142, 1357, 2629, 546], [1357]),
-        ('Sorcerer\'s Stone', [3812, 4325, 5399, 6294, 6735, 7274, 7670, 7842],
-         [3812]),
-    ]
-
-    tests_passed = True
-    for clarification, candidates, expected_output in test_cases:
-        if not assert_list_equals(
-                chatbot.disambiguate(clarification, candidates),
-                expected_output,
-                "Incorrect output for disambiguate('{}', {})".format(
-                    clarification, candidates),
-                orderMatters=False
-        ):
-            tests_passed = False
-    if tests_passed:
-        print('disambiguate() sanity check passed!')
-    print()
-    return True
-
-
-def test_disambiguate_complex():
-    print("Testing complex disambiguate() functionality...")
-    chatbot = Chatbot(True)
-
-    # add more test cases here!!!
-    test_cases = [
-        ('2', [8082, 4511, 1664], [4511]),
-        ('most recent', [524, 5743], [524]),
-        ('the Goblet of Fire one',
-         [3812, 4325, 5399, 6294, 6735, 7274, 7670, 7842], [6294]),
-        ('the second one', [3812, 6294, 4325, 5399, 6735, 7274, 7670, 7842],
-         [6294]),
-    ]
-
-    tests_passed = True
-    for clarification, candidates, expected_output in test_cases:
-        if not assert_list_equals(
-                chatbot.disambiguate(clarification, candidates),
-                expected_output,
-                "Incorrect output for complex disambiguate('{}', {})".format(
-                    clarification, candidates),
-                orderMatters=False
-        ):
-            tests_passed = False
-    if tests_passed:
-        print('complex disambiguate() sanity check passed!')
-    print()
-    return True
-
 
 def test_recommend():
     print("Testing recommend() functionality...")
@@ -347,6 +291,36 @@ def test_recommend():
         print('recommend() sanity check passed!')
     print()
 
+def test_extract_emotion():
+    print("Testing extract_emotion() functionality...")
+    chatbot = Chatbot(True)
+
+    # add more test cases here!!!
+    test_cases = [
+        ('I am quite frustrated by these awful recommendations!!!', {"anger"}),
+        ('Great suggestion!  It put me in a great mood!', {'happiness'}),
+        ('Digusting!!!', {"disgust"}),
+        ('Woah!!  That movie was so shockingly bad!  You had better stop making awful recommendations they\'re pissing me off.', {"anger", "surprise"}),
+        ('What movie should I watch next?', {}),
+        ('Ahhh!  Oh my gosh, what was that?  I just heard something really frightening!', {"fear", "surprise"}),
+        ('I am so sad.  I just watched the saddest movie ever.', {"sadness"}),
+        ('Well, that was a delightful movie!', {"happiness"}),
+    ]
+
+    tests_passed = True
+    for input_text, expected_output in test_cases:
+        if not assert_list_equals(
+                chatbot.extract_emotion(chatbot.preprocess([text.lower() for text in input_text])),
+                expected_output,
+                "Incorrect output for extract_emotion(chatbot.preprocess('"
+                "{}')).".format(
+                    input_text)
+        ):
+            tests_passed = False
+    
+    if tests_passed:
+        print('extract_emotion() sanity check passed!')
+    print()
 
 def main():
     parser = argparse.ArgumentParser(
@@ -376,17 +350,11 @@ def main():
     parser.add_argument('--similarity',
                         help='Tests only the similarity function',
                         action='store_true')
-    parser.add_argument('--find-closest',
-                        help='Tests only the find_movies_closest_to_title '
-                             'function',
+    parser.add_argument('--extract_emotion',
+                        help='Tests only the extract_emotion function',
                         action='store_true')
-    parser.add_argument('--extract-sentiment-multiple',
-                        help='Tests only the extract_sentiment_for_movies '
-                             'function',
-                        action='store_true')
-    parser.add_argument('--disambiguate',
-                        help='Tests only the disambiguate functions (for part '
-                             '2 and 3)',
+    parser.add_argument('--foreign_title',
+                        help='Tests only the find_movies_by_foreign_title function',
                         action='store_true')
 
     args = parser.parse_args()
@@ -408,15 +376,11 @@ def main():
     if args.similarity:
         test_similarity()
         return
-    if args.find_closest:
-        test_find_movies_closest_to_title()
+    if args.extract_emotion:
+        test_extract_emotion()
         return
-    if args.extract_sentiment_multiple:
-        test_extract_sentiment_for_movies()
-        return
-    if args.disambiguate:
-        test_disambiguate()
-        test_disambiguate_complex()
+    if args.foreign_title:
+        test_find_movies_by_foreign_title()
         return
 
     testing_creative = args.creative
@@ -432,10 +396,8 @@ def main():
         test_similarity()
 
     if testing_creative or testing_all:
-        test_find_movies_closest_to_title()
-        test_extract_sentiment_for_movies()
-        test_disambiguate()
-        test_disambiguate_complex()
+        test_extract_emotion()
+        test_find_movies_by_foreign_title()
 
 
 if __name__ == '__main__':

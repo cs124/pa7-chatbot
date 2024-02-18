@@ -10,7 +10,7 @@ from typing import Tuple, List, Dict
 from functools import lru_cache
 
 import numpy as np
-from openai import OpenAI
+from openai import OpenAI, APIConnectionError
 
 
 def load_ratings(src_filename, delimiter: str = '%',
@@ -62,11 +62,16 @@ def load_sentiment_dictionary(src_filename: str, delimiter: str = ',',
 
 @lru_cache
 def load_together_client():
-    from api_keys import TOGETHER_API_KEY
+    together_client = None
+    try:
+        from api_keys import TOGETHER_API_KEY
 
-    together_client = OpenAI(api_key=TOGETHER_API_KEY,
-        base_url='https://api.together.xyz',
-    )
+        together_client = OpenAI(api_key=TOGETHER_API_KEY,
+            base_url='https://api.together.xyz',
+        )
+    except ImportError:
+        print("\001\033[93m\002WARNING: Unable to load Together API client (TOGETHER_API_KEY in api_keys.py not found)\001\033[0m\002")
+        print("\001\033[93m\002LLM Calls will not work.  Please add a TOGETHER_API_KEY to api_keys.py before starting parts 2 and 3.\001\033[0m\002")
 
     return together_client
 
@@ -81,19 +86,23 @@ def call_llm(messages, client, model="mistralai/Mixtral-8x7B-Instruct-v0.1", max
 
 # model = "meta-llama/Llama-2-70b-chat-hf"
 def stream_llm_to_console(messages, client, model="mistralai/Mixtral-8x7B-Instruct-v0.1", max_tokens=256):
-    stream = client.chat.completions.create(
-        model=model,
-        messages=messages,
-        stream=True,
-        max_tokens=max_tokens
-    )
+    try:
+        stream = client.chat.completions.create(
+            model=model,
+            messages=messages,
+            stream=True,
+            max_tokens=max_tokens
+        )
 
-    response = ""
-    for chunk in stream:
-        response += chunk.choices[0].delta.content or ""
-        print(chunk.choices[0].delta.content or "", end="", flush=True)
+        response = ""
+        for chunk in stream:
+            response += chunk.choices[0].delta.content or ""
+            print(chunk.choices[0].delta.content or "", end="", flush=True)
 
-    print()
+        print()
+    except APIConnectionError as e:
+        print("\001\033[91m\002ERROR connecting to Together API!  Please check your TOGETHER_API_KEY in api_keys.py and try again.\001\033[0m\002")
+        response = None
 
     return response
 
