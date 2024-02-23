@@ -31,3 +31,7 @@ if __name__ == '__main__':
     print("Sentence: " + args().sentence)   
 
     print("Flipped Sentiment: " + flipped_sentiment)
+
+# Example usage:
+# python simple_llm_example.py "I am happy today"
+# python simple_llm_example.py "What a horrible noise!"

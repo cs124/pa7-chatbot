@@ -38,3 +38,7 @@ if __name__ == '__main__':
 
     print()
     print(extracted_food)
+
+# Example usage:
+# python json_llm_example.py "I like to eat apples and bananas"
+# python json_llm_example.py "I like to eat steak and potatoes"
