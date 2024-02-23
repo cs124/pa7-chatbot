@@ -8,27 +8,20 @@
 # You will only receive credit for the features you mark as YES below!                  #
 #########################################################################################
 
-FEATURE - Identifying movies without quotation marks and correct capitalization (part 1): NO
-FEATURE - Identifying movies without quotation marks and correct capitalization (part 2): NO
-FEATURE - Alternate/foreign titles: NO
-FEATURE - Disambiguation (part 1): NO
-FEATURE - Fine-grained sentiment extraction: NO
-FEATURE - Spell-correcting fallback for find_movies_by_title: NO
-FEATURE - Extracting sentiment with multiple-movie input: NO
-FEATURE - Disambiguation (part 2): NO
-FEATURE - Dialogue for spell-checking: NO
-FEATURE - Dialogue for disambiguation: NO
-FEATURE - Communicating sentiments and movies extracted to the user given multiple-movie input: NO
-FEATURE - Responding to arbitrary input: NO
-FEATURE - Identifying and responding to emotions: NO
-FEATURE - Chatbot theme/persona: NO
-Did not implement any of the above features: NO
+FEATURE - [LLM] Communicating Sentiment and Movie Extraction: NO
+FEATURE - [LLM] Staying Focused on Movies: NO
+FEATURE - [LLM] Giving Recommendations after 5 Data Points: NO
+FEATURE - [CREATIVE] Find Foreign Movie Title: NO
+FEATURE - [CREATIVE] Extracting Emotion from User Input: NO
+FEATURE - [CREATIVE] Responding to Arbitrary User Input: NO
+FEATURE - [CREATIVE] Responding Appropriately to User Emotion: NO
+FEATURE - [CREATIVE] Chatbot Theme/Persona: NO
+Did not implement any of the above features: YES
 
 #########################################################################################
 # Team Contributions                                                                    #
 #########################################################################################
-TODO: Please write a short description of what each team member contributed!
-
+We did cool stuff!
 
 #########################################################################################
 # Optional: Feel free to include anything else that you want us to know about your      #
