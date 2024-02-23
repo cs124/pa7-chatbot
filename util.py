@@ -113,7 +113,7 @@ def stream_llm_to_console(messages, client, model="mistralai/Mixtral-8x7B-Instru
 #   model: The model to use for the API call.
 #   max_tokens: The maximum number of tokens to generate in the response.
 # Returns the response from the API.
-def simple_llm_call(system_prompt, message, model="mistralai/Mixtral-8x7B-Instruct-v0.1", max_tokens=256):
+def simple_llm_call(system_prompt, message, model="mistralai/Mixtral-8x7B-Instruct-v0.1", max_tokens=256, stop=None):
     client = load_together_client()
     chat_completion = client.chat.completions.create(
         messages=[{
@@ -124,7 +124,8 @@ def simple_llm_call(system_prompt, message, model="mistralai/Mixtral-8x7B-Instru
             "content": message,
         }],
         model=model,
-        max_tokens=max_tokens
+        max_tokens=max_tokens,
+        stop=stop
     )
 
     return chat_completion.choices[0].message.content

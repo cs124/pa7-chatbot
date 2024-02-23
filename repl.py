@@ -121,7 +121,7 @@ class REPL(cmd.Cmd):
 
         if line == ':quit':
             return True
-        elif line.lower() == 'who are you?':
+        elif line.lower() == 'who are you?' and not self.llm:
             self.do_secret(line)
         elif ':debug on' in line.lower():
             print('enabling debug...')

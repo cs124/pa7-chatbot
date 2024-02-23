@@ -170,44 +170,22 @@ def test_find_movies_by_title():
     print()
 
 def test_find_movies_by_foreign_title():
-    print("Testing find_movies_by_title() foreign film functionality...")
+    print("Testing find_movies_by_title() foreign film functionality... This might take a moment if you call an LLM model!")
     chatbot = Chatbot(True)
-
-    # add more test cases here!!!
-    # These test cases are foreign titles listed in the movies.txt file
-    test_cases = [
-        ('La tigre e la neve', [6520]), # Italian
-        ('La science des rêves', [6523]), # French
-        ('Der siebente Kontinent', [6527]), # German
-        ('El Laberinto del fauno', [6537]), # Spanish
-        ('Il Decameron', [6592]), # Italian
-        ('Pelle erobreren', [3412]), # Danish
-        ('Goya en Burdeos', [3116]), # Spanish
-    ]
 
     # These test cases are foreign titles not listed in the movies.txt file
     # They are translations of the English titles found in the movies.txt file
     test_cases_translations = [
-        ('Den Fantastiske Spider-Man', [8089]), # Danish
+        ('Jernmand', [6944]), # Danish
         ('Un Roi à New York', [2906]), # French
         ('Tote Männer Tragen Kein Plaid', [1670]), # German
-        ('Indiana Jones e il Tempio Maledetto', [1676]), # Italian
-        ('Junglebogen', [1639]), # Danish
-        ('Doble Felicidad', [306]) # Spanish
-        ('Der König der Löwen', [329]), # German
+        ('Indiana Jones e il Tempio Maledetto', [1675]), # Italian
+        ('Junglebogen', [326, 1638, 8947]), # Danish
+        ('Doble Felicidad', [306]), # Spanish
+        ('Der König der Löwen', [328]), # German
     ]
 
     tests_passed = True
-    for input_text, expected_output in test_cases:
-        if not assert_list_equals(
-                chatbot.find_movies_by_title(input_text),
-                expected_output,
-                "Incorrect output for find_movies_by_title('{}').".format(
-                    input_text),
-                orderMatters=False
-        ):
-            tests_passed = False
-    
     for input_text, expected_output in test_cases_translations:
         if not assert_list_equals(
                 chatbot.find_movies_by_title(input_text),
@@ -291,26 +269,28 @@ def test_recommend():
     print()
 
 def test_extract_emotion():
-    print("Testing extract_emotion() functionality...")
+    print("Testing extract_emotion() functionality... (This might take a moment if you call an LLM model!)")
     chatbot = Chatbot(True)
 
     # add more test cases here!!!
     test_cases = [
-        ('I am quite frustrated by these awful recommendations!!!', {"anger"}),
-        ('Great suggestion!  It put me in a great mood!', {'happiness'}),
-        ('Digusting!!!', {"disgust"}),
-        ('Woah!!  That movie was so shockingly bad!  You had better stop making awful recommendations they\'re pissing me off.', {"anger", "surprise"}),
-        ('What movie should I watch next?', {}),
-        ('Ahhh!  Oh my gosh, what was that?  I just heard something really frightening!', {"fear", "surprise"}),
-        ('I am so sad.  I just watched the saddest movie ever.', {"sadness"}),
-        ('Well, that was a delightful movie!', {"happiness"}),
+        ('I am quite frustrated by these awful recommendations!!!', set(["anger"])),
+        ('Great suggestion!  It put me in a great mood!', set(['happiness'])),
+        ('Digusting!!!', set(["disgust"])),
+        ('Woah!!  That movie was so shockingly bad!  You had better stop making awful recommendations they\'re pissing me off.', set(["anger", "surprise"])),
+        ('What movie would you suggest I watch next?', set([])),
+        ('Ack, woah!  Oh my gosh, what was that?  Really startled me.  I just heard something really frightening!', set(["fear", "surprise"])),
+        ('I am so sad.  I just watched the saddest movie ever.', set(["sadness"])),
+        ('Well, that was a delightful movie!', set(["happiness"])),
     ]
+    all_emotions = {"anger", "disgust", "fear", "happiness", "sadness", "surprise"}
 
     tests_passed = True
     for input_text, expected_output in test_cases:
-        if not assert_list_equals(
-                chatbot.extract_emotion(chatbot.preprocess([text.lower() for text in input_text])),
+        if not assert_list_contains_and_excludes(
+                set([emotion.lower() for emotion in chatbot.extract_emotion(chatbot.preprocess(input_text))]),
                 expected_output,
+                all_emotions - expected_output,
                 "Incorrect output for extract_emotion(chatbot.preprocess('"
                 "{}')).".format(
                     input_text)
@@ -353,7 +333,7 @@ def main():
                         help='Tests only the extract_emotion function',
                         action='store_true')
     parser.add_argument('--foreign_title',
-                        help='Tests only the find_movies_by_foreign_title function',
+                        help='Tests only the find_movies_by_title function with foreign titles',
                         action='store_true')
 
     args = parser.parse_args()

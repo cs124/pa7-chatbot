@@ -5,6 +5,7 @@
 # Update: 2024-01: Added the ability to run the chatbot as LLM interface (@mryan0)
 ######################################################################
 import util
+from pydantic import BaseModel, Field
 
 import numpy as np
 
