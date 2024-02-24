@@ -159,6 +159,7 @@ class REPL(cmd.Cmd):
         response = stream_llm_to_console(
             messages=self.llm_history,
             client=self.llm_client,
+            stop=["<</SYS>>"]
         )
         self.llm_history.append({
             "role": "assistant",

@@ -85,13 +85,14 @@ def call_llm(messages, client, model="mistralai/Mixtral-8x7B-Instruct-v0.1", max
     return chat_completion.choices[0].message.content
 
 # model = "meta-llama/Llama-2-70b-chat-hf"
-def stream_llm_to_console(messages, client, model="mistralai/Mixtral-8x7B-Instruct-v0.1", max_tokens=256):
+def stream_llm_to_console(messages, client, model="mistralai/Mixtral-8x7B-Instruct-v0.1", max_tokens=256, stop=None):
     try:
         stream = client.chat.completions.create(
             model=model,
             messages=messages,
             stream=True,
-            max_tokens=max_tokens
+            max_tokens=max_tokens,
+            stop=stop
         )
 
         response = ""
