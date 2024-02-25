@@ -53,10 +53,10 @@ class REPL(cmd.Cmd):
     undoc_header = ''
     ruler = '-'
 
-    def __init__(self, creative=False, llm=False):
+    def __init__(self, llm_programming=False, llm_prompting=False):
         super().__init__()
 
-        self.chatbot = Chatbot(creative=creative)
+        self.chatbot = Chatbot(llm_enabled=llm_programming)
         self.name = self.chatbot.name
         self.bot_prompt = '\001\033[96m\002%s> \001\033[0m\002' % self.name
 
@@ -66,7 +66,7 @@ class REPL(cmd.Cmd):
         self.debug = False
         self.debug_chatbot = False
 
-        self.llm = llm
+        self.llm_prompting = llm_prompting
         self.llm_history = [{
             "role": "system",
             "content": self.chatbot.llm_system_prompt(),
@@ -106,7 +106,7 @@ class REPL(cmd.Cmd):
         # Stop processing commands if the user enters :quit
         if line == ":quit":
             return True
-        elif self.llm:
+        elif self.llm_prompting:
             self.process_llm(line)
         else:
             response = self.chatbot.process(line)
@@ -121,7 +121,7 @@ class REPL(cmd.Cmd):
 
         if line == ':quit':
             return True
-        elif line.lower() == 'who are you?' and not self.llm:
+        elif line.lower() == 'who are you?' and not self.llm_prompting:
             self.do_secret(line)
         elif ':debug on' in line.lower():
             print('enabling debug...')
@@ -168,10 +168,10 @@ class REPL(cmd.Cmd):
 
 def process_command_line():
     parser = argparse.ArgumentParser(description=description)
-    parser.add_argument('--creative', dest='creative', action='store_true',
-                        default=False, help='Enables creative mode')
-    parser.add_argument('--llm', dest='llm', action='store_true',
-                        default=False, help='Enables LLM mode')
+    parser.add_argument('--llm_programming', dest='llm_programming', action='store_true',
+                        default=False, help='Enables LLM programming mode')
+    parser.add_argument('--llm_prompting', dest='llm_prompting', action='store_true',
+                        default=False, help='Enables LLM prompting mode')
     args = parser.parse_args()
     return args
 
@@ -207,5 +207,5 @@ if __name__ == '__main__':
     # END TESTING CODE      #
     #########################
     args = process_command_line()
-    repl = REPL(creative=args.creative, llm=args.llm)
+    repl = REPL(llm_prompting=args.llm_prompting, llm_programming=args.llm_programming)
     repl.cmdloop()

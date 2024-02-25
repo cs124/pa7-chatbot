@@ -14,12 +14,12 @@ import numpy as np
 class Chatbot:
     """Simple class to implement the chatbot for PA 7."""
 
-    def __init__(self, creative=False):
+    def __init__(self, llm_enabled=False):
         # The chatbot's default name is `moviebot`.
         # TODO: Give your chatbot a new name.
         self.name = 'moviebot'
 
-        self.creative = creative
+        self.llm_enabled = llm_enabled
 
         # This matrix has the following shape: num_movies x num_users
         # The values stored in each row i and column j is the rating for
@@ -72,6 +72,9 @@ class Chatbot:
     def llm_system_prompt(self):
         """
         Return the system prompt used to guide the LLM chatbot conversation.
+
+        NOTE: This is only for LLM Mode!  In LLM Programming mode you will define
+        the system prompt for each individual call to the LLM.
         """
         ########################################################################
         # TODO: Write a system prompt message for the LLM chatbot              #
@@ -116,10 +119,10 @@ class Chatbot:
         # directly based on how modular it is, we highly recommended writing   #
         # code in a modular fashion to make it easier to improve and debug.    #
         ########################################################################
-        if self.creative:
-            response = "I processed {} in creative mode!!".format(line)
+        if self.llm_enabled:
+            response = "I processed {} in LLM Programming mode!!".format(line)
         else:
-            response = "I processed {} in starter mode!!".format(line)
+            response = "I processed {} in Starter (GUS) mode!!".format(line)
 
         ########################################################################
         #                          END OF YOUR CODE                            #
@@ -157,7 +160,7 @@ class Chatbot:
         return text
     
     def extract_emotion(self, preprocessed_input):
-        """CREATIVE MODE: Extract an emotion from a line of pre-processed text.
+        """LLM PROGRAMMING MODE: Extract an emotion from a line of pre-processed text.
         
         Given an input text which has been pre-processed with preprocess(),
         this method should return a list representing the emotion in the text.
@@ -311,7 +314,7 @@ class Chatbot:
         ########################################################################
         return similarity
 
-    def recommend(self, user_ratings, ratings_matrix, k=10, creative=False):
+    def recommend(self, user_ratings, ratings_matrix, k=10, llm_enabled=False):
         """Generate a list of indices of movies to recommend using collaborative
          filtering.
 
@@ -328,7 +331,7 @@ class Chatbot:
         :param ratings_matrix: a binarized 2D numpy matrix of all ratings, where
           `ratings_matrix[i, j]` is the rating for movie i by user j
         :param k: the number of recommendations to generate
-        :param creative: whether the chatbot is in creative mode
+        :param llm_enabled: whether the chatbot is in llm programming mode
 
         :returns: a list of k movie indices corresponding to movies in
         ratings_matrix, in descending order of recommendation.
@@ -342,8 +345,8 @@ class Chatbot:
         # WARNING: Do not use the self.ratings matrix directly in this         #
         # function.                                                            #
         #                                                                      #
-        # For starter mode, you should use item-item collaborative filtering   #
-        # with cosine similarity, no mean-centering, and no normalization of   #
+        # For GUS mode, you should use item-item collaborative filtering with  #
+        # cosine similarity, no mean-centering, and no normalization of        #
         # scores.                                                              #
         ########################################################################
 
@@ -384,7 +387,7 @@ class Chatbot:
         return """
         Your task is to implement the chatbot as detailed in the PA7
         instructions.
-        Remember: in the starter mode, movie names will come in quotation marks
+        Remember: in the GUS mode, movie names will come in quotation marks
         and expressions of sentiment will be simple!
         TODO: Write here the description for your own chatbot!
         """

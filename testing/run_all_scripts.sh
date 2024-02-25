@@ -69,35 +69,36 @@ main() {
 
     local -r TRANSCRIPTS_DIR="outputs-for-scripts"
     mkdir -p "${TRANSCRIPTS_DIR}/standard"
-    mkdir -p "${TRANSCRIPTS_DIR}/creative"
+    mkdir -p "${TRANSCRIPTS_DIR}/llm_prompting"
+    mkdir -p "${TRANSCRIPTS_DIR}/llm_programming"
 
-    for file in test_scripts/standard/*; do
+    for file in testing/test_scripts/standard/*; do
         local TEST_ID="$(basename ${file} .txt)"
         local TRANSCRIPT_PATH="${TRANSCRIPTS_DIR}/standard/"
         local TRANSCRIPT_FILE="${TRANSCRIPT_PATH}${TEST_ID}.transcript"
 
         echo "(Standard) Generating transcript for ${TEST_ID} in ${TRANSCRIPT_PATH}."
 
-        python3 ../repl.py < "${file}" &> "${TRANSCRIPT_FILE}"
+        python3 repl.py < "${file}" &> "${TRANSCRIPT_FILE}"
     done
 
-    for file in test_scripts/llm/*; do
+    for file in testing/test_scripts/llm_prompting/*; do
         local TEST_ID="$(basename ${file} .txt)"
-        local TRANSCRIPT_PATH="${TRANSCRIPTS_DIR}/llm/"
+        local TRANSCRIPT_PATH="${TRANSCRIPTS_DIR}/llm_prompting/"
         local TRANSCRIPT_FILE="${TRANSCRIPT_PATH}${TEST_ID}.transcript"
 
-        echo "(LLM) Generating transcript for ${TEST_ID} in ${TRANSCRIPT_PATH}."
+        echo "(LLM Prompting) Generating transcript for ${TEST_ID} in ${TRANSCRIPT_PATH}."
 
-        python3 ../repl.py --llm < "${file}" &> "${TRANSCRIPT_FILE}"
+        python3 repl.py --llm_prompting < "${file}" &> "${TRANSCRIPT_FILE}"
     done
 
-    for file in test_scripts/creative/*; do
+    for file in testing/test_scripts/llm_programming/*; do
         local TEST_ID="$(basename ${file} .txt)"
-        local TRANSCRIPT_PATH="${TRANSCRIPTS_DIR}/creative/"
+        local TRANSCRIPT_PATH="${TRANSCRIPTS_DIR}/llm_programming/"
         local TRANSCRIPT_FILE="${TRANSCRIPT_PATH}${TEST_ID}.transcript"
 
-        echo "(Creative) Generating transcript for ${TEST_ID} in ${TRANSCRIPT_PATH}."
-        python3 ../repl.py --creative < "${file}" &> "${TRANSCRIPT_FILE}"
+        echo "(LLM Programming) Generating transcript for ${TEST_ID} in ${TRANSCRIPT_PATH}."
+        python3 repl.py --llm_programming < "${file}" &> "${TRANSCRIPT_FILE}"
     done
 }
 

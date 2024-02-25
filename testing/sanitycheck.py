@@ -170,7 +170,7 @@ def test_find_movies_by_title():
     print()
 
 def test_find_movies_by_foreign_title():
-    print("Testing find_movies_by_title() foreign film functionality... This might take a moment if you call an LLM model!")
+    print("Testing find_movies_by_title() foreign film functionality... This might take a moment if you use LLM JSON outputs!")
     chatbot = Chatbot(True)
 
     # These test cases are foreign titles not listed in the movies.txt file
@@ -269,7 +269,7 @@ def test_recommend():
     print()
 
 def test_extract_emotion():
-    print("Testing extract_emotion() functionality... (This might take a moment if you call an LLM model!)")
+    print("Testing extract_emotion() functionality... (This might take a moment if you use LLM JSON Outputs!)")
     chatbot = Chatbot(True)
 
     # add more test cases here!!!
@@ -310,8 +310,8 @@ def main():
 
     parser.add_argument('-a', '--all', help='Tests all of the functions',
                         action='store_true')
-    parser.add_argument('-c', '--creative',
-                        help='Tests all of the creative function',
+    parser.add_argument('-c', '--llm_programming',
+                        help='Tests all of the llm programming functions',
                         action='store_true')
     parser.add_argument('--extract-titles',
                         help='Tests only the extract_titles function',
@@ -362,10 +362,10 @@ def main():
         test_find_movies_by_foreign_title()
         return
 
-    testing_creative = args.creative
+    testing_llm_programming = args.llm_programming
     testing_all = args.all
 
-    if not testing_creative or testing_all:
+    if not testing_llm_programming or testing_all:
         test_extract_titles()
         test_find_movies_by_title()
         test_extract_sentiment()
@@ -374,7 +374,7 @@ def main():
         test_binarize()
         test_similarity()
 
-    if testing_creative or testing_all:
+    if testing_llm_programming or testing_all:
         test_extract_emotion()
         test_find_movies_by_foreign_title()
 

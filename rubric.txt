@@ -11,11 +11,11 @@
 FEATURE - [LLM] Communicating Sentiment and Movie Extraction: NO
 FEATURE - [LLM] Staying Focused on Movies: NO
 FEATURE - [LLM] Giving Recommendations after 5 Data Points: NO
-FEATURE - [CREATIVE] Find Foreign Movie Title: NO
-FEATURE - [CREATIVE] Extracting Emotion from User Input: NO
-FEATURE - [CREATIVE] Responding to Arbitrary User Input: NO
-FEATURE - [CREATIVE] Responding Appropriately to User Emotion: NO
-FEATURE - [CREATIVE] Chatbot Theme/Persona: NO
+FEATURE - [LLM PROGRAMMING] Find Foreign Movie Title: NO
+FEATURE - [LLM PROGRAMMING] Extracting Emotion from User Input: NO
+FEATURE - [LLM PROGRAMMING] Responding to Arbitrary User Input: NO
+FEATURE - [LLM PROGRAMMING] Responding Appropriately to User Emotion: NO
+FEATURE - [LLM PROGRAMMING] Chatbot Theme/Persona: NO
 Did not implement any of the above features: YES
 
 #########################################################################################

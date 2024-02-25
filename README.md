@@ -4,9 +4,9 @@
 
 **You must work in groups of 3-4 members (To work in a group of size 2, you must get special permission from the staff). All submissions will be graded according to the same criteria, regardless of group size.**
 
-In this assignment you will build a chatbot somewhat like the chatbot ELIZA that you saw in the lecture. You will work on a simpler, single-agent version first, and then choose from a set of advanced features to get more points. **A score of 85 points for the coding portion is considered full credit (61 Starter + 8 LLM + 16 Creative).  For LLM and Creative mode you will choose which of the parts to implement.  You must implement the full starter mode.  The full assignment (coding + written) is worth 100 points.**
+In this assignment you will build a chatbot somewhat like the chatbot ELIZA that you saw in the lecture. You will work on a simpler, single-agent version first, and then choose from a set of advanced features to get more points. **A score of 85 points for the coding portion is considered full credit (1 rubric + 60 Starter (GUS) + 8 LLM Prompting + 16 LLM Programming).  For LLM Prompting and LLM Programming mode you will choose which of the parts to implement.  You must implement the full starter mode.  The full assignment (coding + written) is worth 100 points.**
 
-To get you started, we will guide you in the implementation of a chatbot that can recommend movies to the user – this will be referred to as the **starter** mode. After you have implemented the movie-recommender chatbot, we will try to replicate the bot you wrote by prompting a Large Language Model (LLM) by running your bot in **llm** mode.  Finally you will switch to a **creative** mode which allows you to use both your own code and LLM calls to implement an interesting extension of the movie recommender. Be creative, and have fun!
+To get you started, we will guide you in the implementation of a chatbot that can recommend movies to the user – this will be referred to as the **starter** mode. After you have implemented the movie-recommender chatbot, we will try to replicate the bot you wrote by prompting a Large Language Model (LLM) by running your bot in **llm prompting** mode.  Finally you will switch to an **llm programming** mode which allows you to use both your own code and LLM calls to implement an interesting extension of the movie recommender. Be creative, and have fun!
 
 PA7 Has 4 Submission Components on Gradescope.  Make sure you complete them all!
  - PA7 Group Work Form (5 Points)
@@ -27,10 +27,10 @@ This is a big file! Here are the main sections:
 - [Background](#a-little-bit-of-background)
 - [High Level Spec](#high-level-specification)
 
-**Getting started: Starter Mode, REPL, and resources**
+**(Part 1) Getting started: Starter Mode (GUS), REPL, and resources**
 - [Starting to code: warm up](#starting-to-code-warm-up)
 - [Starter code and REPL](#running-the-starter-code)
-- [Starter Mode Overview](#starter-mode-60-points)
+- [Starter Mode Overview](#part-1-starter-mode---gus-60-points)
 - [Writing code for starter mode](#writing-code-for-starter-mode)
 - [Movie Database](#your-movie-database-movielens)
 - [Sentiment Lexicon](#your-sentiment-lexicon)
@@ -42,16 +42,16 @@ This is a big file! Here are the main sections:
 - [Important tips and notes](#important-notes-and-tips) **Important!!**
 - [Other resources and code size](#other-resources-and-code-size)
 
-**LLM Mode**
-- [LLM Mode Overview](#llm-mode-8-points)
-- [LLM Mode Rubric](#llm-mode-rubric)
-- [Running in LLM Mode](#running-in-llm-mode)
+**(Part 2) LLM Prompting Mode**
+- [LLM Prompting Mode Overview](#part-2-llm-prompting-mode-8-points)
+- [LLM Prompting Mode Rubric](#llm-prompting-mode-rubric)
+- [Running in LLM Prompting Mode](#running-in-llm-prompting-mode)
 
-**Creative Mode**
-- [Creative Mode Overview](#creative-mode-16-points)
-- [Creative Mode Rubric](#creative-rubric)
-- [Switching to Creative Mode](#running-in-creative-mode)
-- [How are starter and creative mode different?](#difference-between-starter-mode-and-creative-mode)
+**(Part 3) LLM Programming Mode**
+- [LLM Programming Mode Overview](#part-3-llm-programming-mode-16-points)
+- [LLM Programming Mode Rubric](#llm-programming-rubric)
+- [Switching to LLM Programming Mode](#running-in-llm-programming-mode)
+- [How are starter and LLM Programming mode different?](#difference-between-starter-mode-and-llm-programming-mode)
 
 **Evaluation and Rubric (answers to your grading questions!)**
 - [Evaluation](#evaluation) (the rubric is here!)
@@ -73,17 +73,17 @@ In the early 1960s, the well-known early artificial intelligence (AI) program EL
 
 After the initial success by ELIZA, a number of other chatbots were created with increased complexity – as an example, on the late 70s a chatbot named [PARRY](https://en.wikipedia.org/wiki/PARRY), created by Stanford’s Psychiatry professor [Kenneth Colby](https://en.wikipedia.org/wiki/Kenneth_Colby), simulated a psychotic patient that used a belief system internally, allowing for more complex behavior.
 
-You will implement a chatbot similar to ELIZA, but even more sophisticated! This chatbot will recommend movies to the user. Let’s get started!
+You will implement a chatbot similar to ELIZA, but even more sophisticated!  Using frame-based dialogue we will implement a dialogue agent using similar ideas to the GUS agent described in lecture! This chatbot will recommend movies to the user. Let’s get started!
 
 ## High-level specification
-Conversational agents like ELIZA can be decomposed into four modules (see Jurafsky and Martin 2008, [Norvig 1991](https://github.com/norvig/paip-lisp)), each one responsible for a specific task:
+Conversational agents like ELIZA or GUS can be decomposed into four modules (see Jurafsky and Martin 2008, [Norvig 1991](https://github.com/norvig/paip-lisp)), each one responsible for a specific task:
 
 1. Read the input.
 2. Extract relevant information from the input, which can be domain specific – as in our movie recommender chatbot.
 3. Transform the input into a response – users normally expect a response in the given domain.
 4. Print the response.
 
-The starter code provided for the assignment handles modules (1) and (4) for you. You will be responsible for implementing modules (2) and (3), in both the starter and creative modes.
+The starter code provided for the assignment handles modules (1) and (4) for you. You will be responsible for implementing modules (2) and (3), in both the starter (GUS) and LLM Programming modes.
 
 Once you have set up the environment, the warm-up section will help you familiarize yourself with the REPL. After you feel comfortable interacting with the REPL, you will implement the extraction and transformation modules for the movie recommender chatbot.
 
@@ -109,7 +109,7 @@ This will useful when you want to test the same script multiple times. We will b
 ## Customizing your chatbot
 All the code that you will need to write for this assignment will be in `chatbot.py`. Open that file and follow the instructions there to change the name of the chatbot, the greeting message, and the goodbye message. You can change your chatbot’s name now!
 
-# Starter Mode (60 points)
+# (Part 1) Starter Mode - GUS (60 points)
 In starter mode, your chatbot will help the user by giving movie recommendations. It will ask the user to say something about movies they have liked, and it will come up with a recommendation based on those data points. The user of the chatbot in starter mode will follow its instructions, so you will deal with fairly restricted input. Specifically, you can assume:
 - **Movie names** will come in **quotation marks**
 - **Expressions of sentiment** will be **simple**
@@ -209,7 +209,7 @@ The data comes from [MovieLens](https://movielens.org/) and consists of a total 
 The starter code also provides a list with 9125 movie titles and their associated movie genres. The list is formatted as expected: the movie in the first position in the list corresponds to the movie in the first row of the matrix. An example entry looks like:
 
     ['Blade Runner (1982)', 'Action|Sci-Fi|Thriller']
-As in previous homeworks, you can inspect the data to have an idea of the variations in how the titles are represented in this dataset. Note that the second element in the list/array is a string with movie genres separated by the pipe symbol |. You may find this information interesting for the creative mode!
+As in previous homeworks, you can inspect the data to have an idea of the variations in how the titles are represented in this dataset. Note that the second element in the list/array is a string with movie genres separated by the pipe symbol |.
 
 ## Your sentiment lexicon
 The starter code also provides a sentiment lexicon that you can use to extract sentiment from the input. It consists of 3624 words with their associated sentiment extracted from [Harvard Inquirer](http://www.wjh.harvard.edu/~inquirer/spreadsheet_guide.htm) (Stone et al. 1966). The lexicon is stored for your convenience in a dictionary/hash map, where the word is the key and the sentiment the value.
@@ -222,8 +222,7 @@ As mentioned before, you can run individual test scripts located in the testing/
     python repl.py < testing/test_scripts/simple.txt
 You can also run all the scripts with the following commands:
 
-    cd testing/
-    sh run_all_scripts.sh
+    sh testing/run_all_scripts.sh
 You should check the outputted transcripts to make sure that your chatbot doesn't crash or fail incoherently. We will not be grading on these exact scripts (nor do the given test scripts cover all the requirements given in the rubric), but the method of running scripts will be used. Feel free to add your own test scripts as well! If you do, don't forget to add :quit as your last line or else the script will never terminate.
 
 **Note:** passing locally does **NOT** guarantee that you will pass the autograder, so please submit **early and often**!!
@@ -246,9 +245,9 @@ We encourage you to use numpy for this assignment. [np.dot](https://docs.scipy.o
 
 # Connecting to Together API
 
-For LLM Mode and Creative Mode we need external LLM API access.  Together AI has graciously granted us free credits to use for this assignment.  We provide a brief guide on getting an API key and linking it this assignment [here](https://docs.google.com/document/d/1N5chC5b15ls-XXcpfjhSx71854fmvb_4DGD4qxkT0LU/edit?usp=sharing).
+For LLM Prompting Mode and LLM Programming Mode we need external LLM API access.  Together AI has graciously granted us free credits to use for this assignment.  We provide a brief guide on getting an API key and linking it this assignment [here](https://docs.google.com/document/d/1N5chC5b15ls-XXcpfjhSx71854fmvb_4DGD4qxkT0LU/edit?usp=sharing).
 
-# LLM Mode (8 points)
+# (Part 2) LLM Prompting Mode (8 points)
 
 LLMs are a powerful tool that drive a lot of modern chatbots!  Let's get some experience building an LLM chatbot.  For this part of the assignment we will use the [Mixtral 8x7B Model](https://huggingface.co/docs/transformers/en/model_doc/mixtral).  Mixtral is a blend of eight 7-billion parameter language models!
 
@@ -275,41 +274,35 @@ AutoTrader's mission is to make the car buying and selling process easy and tran
 ```
 Uh oh!  We want a movie recommender bot, not a car sales expert!  Let's get this bot under control.  
 
-## LLM Mode Rubric
+## LLM Prompting Mode Rubric
 
-By just modifying the system prompt, choose to implement the following features to get up to 8 points of credit:
-
-| Rubric Item                                                                                       | Possible Points | Example Input                                                                                                             | Example Output                                                                                                                                         |
-|---------------------------------------------------------------------------------------------------|-----------------|---------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Communicating sentiment and movie extracted to the user                                           |        2        | I enjoyed "The Notebook".                                                                                                 | _Something like:  Ok, you liked "The Notebook"! Tell me what you thought of another movie._                                                            |
-| Staying Focused on Movies                                                                         |        6        | Can we talk about cars instead?                                                                                           | _Something like: As a moviebot assistant my job is to help you with only your movie related needs!  Anything film related that you'd like to discuss?_ |
-| Giving recommendations after 5 input films (asks automatically after user provides 5 data points) |        8        | _Five data points of films that the user does or does not like throughout the course of at least 5 turns of conversation_ | _Something like: Ok, now that you've shared your opinion on 5/5 films would you like a recommendation?_                                                |
+By just modifying the system prompt, choose to implement the features outlined in [the rubric](https://docs.google.com/spreadsheets/d/1MXqnPk60nwNWoNQQcLK2rTWIolZsi8u8pmQx31ewh8Y/edit?usp=sharing) to get up to 8 points.
 
 How do we do this by just modifying the system prompt?  This is a skill called prompt engineering!  If you're looking for inspiration check out [this prompt engineering guide by OpenAI](https://platform.openai.com/docs/guides/prompt-engineering)!  
 
 Some tips we have that worked for us: Craft a narrative that elevates the seriousness of the bot staying on topic!  Include a few examples of the expected outputs in the system prompt.
 
-Note that you can implement all 3 and if you get each partially correct on our hidden test cases you can still add up to 8/8!  Basically you won't be penalized for trying to do all three!
+Note that you can implement all 3 and if you get each partially correct on our test cases you can still add up to 8/8!  Basically you won't be penalized for trying to do all three!
 
-## Running in LLM Mode
+## Running in LLM Prompting Mode
 
 To run your LLM chatbot run the following command:
 
-    python repl.py --llm
+    python repl.py --llm_prompting
 
 To test on our sample test_scripts you can run:
 
-    python repl.py --llm < testing/test_scripts/llm/distraction_easy.txt
+    python repl.py --llm_prompting < testing/test_scripts/llm_prompting/distraction_easy.txt
 
 In rubric.txt, you must mark all the functionality you implemented in llm mode, which you can do by replacing the "NO" with "YES" in the desired lines. Requirements marked as "NO" will not be graded.
 
-# Creative Mode (16 points)
-After you have implemented the movie recommendation chatbot in the starter mode and llm mode, it is time to switch to creative mode! In creative mode your chatbot can be a better movie recommender system, but you can also take it in a different direction if you want to. This time the user will challenge the chatbot with unexpected input and evaluate it on different advanced capabilities. Refer to the [rubric](https://docs.google.com/spreadsheets/d/1MXqnPk60nwNWoNQQcLK2rTWIolZsi8u8pmQx31ewh8Y/edit?usp=sharing) to see how the chatbot will be evaluated, which will give you ideas about capabilities you can implement. There are 24
+# (Part 3) LLM Programming Mode (16 points)
+After you have implemented the movie recommendation chatbot in the starter (GUS) mode and llm prompting mode, it is time to switch to llm programming mode! In llm programming mode your chatbot can be a better movie recommender system, but you can also take it in a different direction if you want to. This time the user will challenge the chatbot with unexpected input and evaluate it on different advanced capabilities. Refer to the [rubric](https://docs.google.com/spreadsheets/d/1MXqnPk60nwNWoNQQcLK2rTWIolZsi8u8pmQx31ewh8Y/edit?usp=sharing) to see how the chatbot will be evaluated, which will give you ideas about capabilities you can implement. There are 24
 points worth of features to choose from, out of which 16 will be counted. (So if you implement 24 points worth of features, your score on this section will be capped at 16.)
 
-We can use some of the perks of LLMs alongside the control that python programming gives us in order to create a hybrid chatbot.  This is a new paradigm sometimes called LM programming!
+We can use some of the perks of LLMs alongside the control that python programming gives us in order to create a hybrid chatbot.  This is a new paradigm sometimes called LLM programming!
 
-In order to use LMs calls in our programs we need to have structured and predictable responses from our language models.  There are two ways we can accomplish this:  JSON mode, and careful prompting.
+In order to use LLM calls in our programs we need to have structured and predictable responses from our language models.  There are two ways we can accomplish this:  JSON mode, and careful prompting.
 
 ## JSON Mode
 JSON stands for JavaScript Object Notation and is a structured data format.  Here's an example JSON object:
@@ -390,43 +383,35 @@ When we call Mixtral with this setup we get:
 "I am pleased by these birds"
 ```
 
-Although you lose a lot of the control that JSON mode provides, this strategy is often faster and more flexible.  We recommend you use both modes when implementing Creative Mode to take advantage of the strengths of each!  Be careful not to overly use JSON mode though!  Slow response times aren't good for users or autograders.
+Although you lose a lot of the control that JSON mode provides, this strategy is often faster and more flexible.  We recommend you use both modes when implementing LLM Programming Mode to take advantage of the strengths of each!  Be careful not to overly use JSON mode though!  Slow response times aren't good for users or autograders.
 
-## Creative Rubric
+## LLM Programming Rubric
 
-Select from the following features to add up to 16 points!  Feel free to implement extra, we will only remove points if you don't reach or surpass 16 total.
+Select from the feature in [the rubric](https://docs.google.com/spreadsheets/d/1MXqnPk60nwNWoNQQcLK2rTWIolZsi8u8pmQx31ewh8Y/edit?usp=sharing) to add up to 16 points!  Feel free to implement extra, we will only remove points if you don't reach or surpass 16 total.
 
-| Rubric Item                                                                                                                                                                                                                                                                | Possible Points | Example Input                                                           | Expected Output                                                                                        | Hints                                                                                                                  |
-|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------|-------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|
-| *find_movies_by_title(title)*:  Foreign titles   Languages you will need to handle are: German, Spanish, and French, Danish, and Italian  You must be able to handle translations of movies found only in English in the database.  We will only test direct translations. |        8        | "El Cuaderno"                                                           | [5448]                                                                                                 | LLMs are often multilingual (sometimes unintentionally!). Ask for a hand with translation!                             |
-| *extract_emotion(text)*:  Identifying emotion in the user input text for processing.  For simplicity we only require 6 emotions: anger, disgust, fear, happiness, sadness and surprise (Ekman, 1972)                                                                       |        6        | Ewww that movie was so gruesome!!  Stop making stupid recommendations!! | ["Disgust", "Anger"]                                                                                   | Does this bear any resemblance to the Food Classification task above?                                                  |
-| *process(text)*:  Responding to arbitrary input                                                                                                                                                                                                                            |        4        | What is your name?                                                      | _Something like: I'm moviebot!_                                                                        | Maybe you can send unfamiliar requests to an LLM to guide the conversation back on track or handle arbitrary requests? |
-| *process(text)*:  Responding appropriately to emotions                                                                                                                                                                                                                     |        2        | I'm so mad right now!                                                   | _Something like: I'm sorry to hear that you are upset_                                                 | If you detected emotions above perhaps you can hardcode responses, or ask an LLM for help?                             |
-| *process(text)*:  Chatbot theme/persona                                                                                                                                                                                                                                    |        4        | I liked "The Notebook"                                                  | _Something like: Arghhh "The Notebook" be a mighty good film.  What other movies have ye seen, matey?_ | Maybe this resembles the sentiment flipper example above but with minor modifications?                                 |
-
-In rubric.txt, you must mark all the functionality you implemented in creative mode, which you can do by replacing the "NO" with "YES" in the desired lines. Requirements marked as "NO" will not be graded.
+In rubric.txt, you must mark all the functionality you implemented in LLM Programming mode, which you can do by replacing the "NO" with "YES" in the desired lines. Requirements marked as "NO" will not be graded.
 
 In the provided section, please also include a short description of what each team member contributed or state that everyone contributed equally if you believe this is the case.
 
-## Running in Creative Mode
-Switching between to creative mode is easy: by default, the REPL starts in starter mode. To switch to creative, type the following:
+## Running in LLM Programming Mode
+Switching to llm programming mode is easy: by default, the REPL starts in starter (GUS) mode. To switch to llm programming, type the following:
 
-    python repl.py --creative
+    python repl.py --llm_programming
 
-To run the creative mode sanity checks, type the following:
+To run the LLM programming mode sanity checks, type the following:
 
-    python testing/sanitycheck.py --creative
+    python testing/sanitycheck.py --llm_programming
 
-To run the test scripts in creative mode, type the following with the desired script path:
+To run the test scripts in llm programming mode, type the following with the desired script path:
 
-    python repl.py --creative < testing/test_scripts/simple.txt
+    python repl.py --llm_programming < testing/test_scripts/simple.txt
 
-## Difference between starter mode and creative mode
-The difference between starter mode and creative mode is fundamentally a difference in how you will be evaluated **and you are allowed to use LLM calls in creative mode**.
+## Difference between starter mode and LLM Programming mode
+The difference between starter mode and llm programming mode is fundamentally a difference in how you will be evaluated **and you are allowed to use LLM calls in llm programming mode**.
 
-If your creative mode interpretation does not meet the starter mode requirements (maybe it does movie recommendations in a different way or responds drastically differently), then you need to implement a logical fork -- remember that you can check which mode is running with the self.creative variable.
+Please do not use LLM calls in starter mode as it (1) risks timing out the autograder and (2) will not be accepted as a valid implementation for the GUS style architecture.  You must use the `llm_enabled` variable to toggle llm programming mode functionality in your bot.
 
-Before submitting, please test with the scripts in testing/test_scripts/ for both starter and creative mode to make sure they do not fail. If the grading scripts fail, you will not get points for the associated requirement. For example, the rubric item "Failing gracefully" is marked as a starter mode requirement, so any associated script will be run without the --creative flag.
+Before submitting, please test with the scripts in testing/test_scripts/ for both starter and llm programming mode to make sure they do not fail. If the grading scripts fail, you will not get points for the associated requirement. For example, the rubric item "Failing gracefully" is marked as a starter mode requirement, so any associated script will be run without the --llm_programming flag.
 
 ## Other resources and code size
 Numpy is encouraged, but please do not assume other libraries that are not in the standard Python 3.8 distribution in your implementation.
@@ -441,8 +426,8 @@ The CAs (and LLM) will grade your submission with respect to the [rubric](https:
 There are 85 points total in the rubric: 
 - 1 point for formatting the rubric file properly
 - 60 points for starter mode features
-- 8 points for llm mode (out of 16 total)
-- 16 points for creative mode (out of 24 total)
+- 8 points for LLM Prompting mode (out of 16 total)
+- 16 points for LLM Programming mode (out of 24 total)
 
 You will need 85 points for full credit.
 
@@ -467,7 +452,7 @@ Alternatively, if you don't submit a deps folder, you're also welcome to directl
 We are enabling group submission. After you submit the required files, you'll see "Add Group Member" in the top right of the Autograder Results page. Please add the group members you worked with (you may add up to 3). Note that only one group member needs to actually upload the submission to Gradescope.
 
 ### Autograding vs LLM grading vs Manual grading
-In the spirit of using LLMs we are using LLM grading on this assignment.  What does this mean for you?  Not much different than people grading except you get a grade right away!  We are going to run an LLM on your outputs and get a score.  If the LLM docks *any* points, we are going to have our human CAs come in and double check.
+In the spirit of using LLMs for programming we are using LLM grading on this assignment.  Just as any other assignment in this course was autograded, we are also autograding PA7.  We are going to run an LLM on your outputs and get a score.  We want to be cautious about LLM grading errors, however.  If the LLM docks *any* points, we are going to have our human CAs come in and double check.
 
 We want to be completely transparent about our LLM grading!  Check out the prompts we are using [here](https://docs.google.com/document/d/1zd6-uFXYLGCcycuLnjSHAgo8dGhzn0QrY-GaqQhlBoM/edit?usp=sharing).  We don't directly release the test cases, but note that they aren't very different from the provided examples in the rubric.
 
