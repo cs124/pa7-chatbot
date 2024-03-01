@@ -12,6 +12,7 @@ from functools import lru_cache
 import numpy as np
 from openai import OpenAI, APIConnectionError
 
+DEFAULT_STOP = ["\n\n\n\n\n", "<</SYS>>"]
 
 def load_ratings(src_filename, delimiter: str = '%',
                  header: bool = False) -> Tuple[List, np.ndarray]:

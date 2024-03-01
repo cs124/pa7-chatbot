@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 # logger.setLevel(logging.DEBUG)
 
 from chatbot import Chatbot
-from util import load_together_client, stream_llm_to_console
+from util import load_together_client, stream_llm_to_console, DEFAULT_STOP
 
 # Modular ASCII font from http://patorjk.com/software/taag/
 HEADER = """Welcome to Stanford CS124's
@@ -159,7 +159,7 @@ class REPL(cmd.Cmd):
         response = stream_llm_to_console(
             messages=self.llm_history,
             client=self.llm_client,
-            stop=["<</SYS>>"]
+            stop=DEFAULT_STOP,
         )
         self.llm_history.append({
             "role": "assistant",

@@ -279,6 +279,7 @@ def test_extract_emotion():
         ('Digusting!!!', set(["disgust"])),
         ('Woah!!  That movie was so shockingly bad!  You had better stop making awful recommendations they\'re pissing me off.', set(["anger", "surprise"])),
         ('What movie would you suggest I watch next?', set([])),
+        ('What\'s the weather?', set([])),
         ('Ack, woah!  Oh my gosh, what was that?  Really startled me.  I just heard something really frightening!', set(["fear", "surprise"])),
         ('I am so sad.  I just watched the saddest movie ever.', set(["sadness"])),
         ('Well, that was a delightful movie!', set(["happiness"])),

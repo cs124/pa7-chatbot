@@ -8,7 +8,7 @@ In this assignment you will build a chatbot somewhat like the chatbot ELIZA that
 
 To get you started, we will guide you in the implementation of a chatbot that can recommend movies to the user – this will be referred to as the **starter** mode. After you have implemented the movie-recommender chatbot, we will try to replicate the bot you wrote by prompting a Large Language Model (LLM) by running your bot in **llm prompting** mode.  Finally you will switch to an **llm programming** mode which allows you to use both your own code and LLM calls to implement an interesting extension of the movie recommender. Be creative, and have fun!
 
-PA7 Has 4 Submission Components on Gradescope.  Make sure you complete them all!
+PA7 has 4 Submission Components on Gradescope.  Make sure you complete them all!
  - PA7 Group Work Form (5 Points)
  - PA7 Coding (85 Points)
  - PA7 User Testing (5 Points)
@@ -188,8 +188,9 @@ We've decomposed some of the core logic for you. You will need to implement the 
 - Leave entries that are 0 as 0
 - Be called at the **beginning of init** 
     - You will be working with a binarized ratings matrix for the rest of the assignment!
+- `threshold` is a parameter passed to `binarize`, set to 2.5 by default
 
-These functions will be tested by the autograder, so make sure you implement them correctly! The starter code includes a sanity check script that runs some basic tests on these functions to help you debug them. Once you've debugged locally, we **highly reccomend** you submit to Gradescope to test these with the autograder. 
+These functions will be tested by the autograder, so make sure you implement them correctly! The starter code includes a sanity check script that runs some basic tests on these functions to help you debug them. Once you've debugged locally, we **highly recommend** you submit to Gradescope to test these with the autograder. 
 
 We advise that you explore these and other function stubs provided in the starter code and call them in process as appropriate.
 
@@ -280,7 +281,7 @@ By just modifying the system prompt, choose to implement the features outlined i
 
 How do we do this by just modifying the system prompt?  This is a skill called prompt engineering!  If you're looking for inspiration check out [this prompt engineering guide by OpenAI](https://platform.openai.com/docs/guides/prompt-engineering)!  
 
-Some tips we have that worked for us: Craft a narrative that elevates the seriousness of the bot staying on topic!  Include a few examples of the expected outputs in the system prompt.
+Some tips we have that worked for us: Craft a narrative that elevates the seriousness of the bot staying on topic!  Include a few examples of the expected outputs in the system prompt.  Ask the bot to explicitly repeat the count of how many movies you've told it about in each message.
 
 Note that you can implement all 3 and if you get each partially correct on our test cases you can still add up to 8/8!  Basically you won't be penalized for trying to do all three!
 
