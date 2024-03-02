@@ -16,7 +16,11 @@ PA7 has 4 Submission Components on Gradescope.  Make sure you complete them all!
 
  ## Important Setup Note
 
-Although this assignment mostly reuses the environment you set up in PA0, we need one additional package.  Please run this command after activating your cs124 environment.
+Although this assignment mostly reuses the environment you set up in PA0, we need one additional package.  Recall to activate your PA0 environment you will use:
+
+    conda activate cs124
+
+Please run this command after activating your cs124 environment.
 
     pip install openai
 
