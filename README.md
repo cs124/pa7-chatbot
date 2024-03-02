@@ -96,7 +96,7 @@ Modules (1) and (4) are provided to you in this assignment using a common patter
 
 ## Running the starter code
 In the starter code folder, fire up the REPL by issuing the following command:
-`python repl.py`
+`python3 repl.py`
 
 ## Interacting with the REPL
 You can type your message in the prompt to moviebot, our default chatbot, and hit enter. To exit the REPL, write `:quit` (or press Ctrl-C to force the exit). Right now the chatbot is not doing anything more than printing the string you entered – concatenated to a string that says it processed it.
@@ -104,7 +104,7 @@ You can type your message in the prompt to moviebot, our default chatbot, and hi
 ## Interacting with REPL via testing scripts
 In the testing/test_scripts/ folder, you will find some testing scripts. To run a script, enter the following command (replace testing/test_scripts/simple.txt with your desired script):
 
-    python repl.py < testing/test_scripts/simple.txt
+    python3 repl.py < testing/test_scripts/simple.txt
     
 As you can see, each line of `simple.txt` is entered consecutively into the chatbot. However, the script terminates once it hits `:quit` and any lines afterwards will not be executed.
 
@@ -220,11 +220,11 @@ As in previous homeworks, you can inspect the data to have an idea of the variat
 The starter code also provides a sentiment lexicon that you can use to extract sentiment from the input. It consists of 3624 words with their associated sentiment extracted from [Harvard Inquirer](http://www.wjh.harvard.edu/~inquirer/spreadsheet_guide.htm) (Stone et al. 1966). The lexicon is stored for your convenience in a dictionary/hash map, where the word is the key and the sentiment the value.
 
 ## Sanity check
-We have provided a sanity check script to test your code on basic inputs. To run the starter mode sanity checks, run `python testing/sanitycheck.py`
+We have provided a sanity check script to test your code on basic inputs. To run the starter mode sanity checks, run `python3 testing/sanitycheck.py`
 ### Local script testing
 As mentioned before, you can run individual test scripts located in the testing/test_scripts/ directory with the following command:
 
-    python repl.py < testing/test_scripts/simple.txt
+    python3 repl.py < testing/test_scripts/simple.txt
 You can also run all the scripts with the following commands:
 
     sh testing/run_all_scripts.sh
@@ -293,11 +293,11 @@ Note that you can implement all 3 and if you get each partially correct on our t
 
 To run your LLM chatbot run the following command:
 
-    python repl.py --llm_prompting
+    python3 repl.py --llm_prompting
 
 To test on our sample test_scripts you can run:
 
-    python repl.py --llm_prompting < testing/test_scripts/llm_prompting/distraction_easy.txt
+    python3 repl.py --llm_prompting < testing/test_scripts/llm_prompting/distraction_easy.txt
 
 In rubric.txt, you must mark all the functionality you implemented in llm mode, which you can do by replacing the "NO" with "YES" in the desired lines. Requirements marked as "NO" will not be graded.
 
@@ -401,15 +401,15 @@ In the provided section, please also include a short description of what each te
 ## Running in LLM Programming Mode
 Switching to llm programming mode is easy: by default, the REPL starts in starter (GUS) mode. To switch to llm programming, type the following:
 
-    python repl.py --llm_programming
+    python3 repl.py --llm_programming
 
 To run the LLM programming mode sanity checks, type the following:
 
-    python testing/sanitycheck.py --llm_programming
+    python3 testing/sanitycheck.py --llm_programming
 
 To run the test scripts in llm programming mode, type the following with the desired script path:
 
-    python repl.py --llm_programming < testing/test_scripts/simple.txt
+    python3 repl.py --llm_programming < testing/test_scripts/simple.txt
 
 ## Difference between starter mode and LLM Programming mode
 The difference between starter mode and llm programming mode is fundamentally a difference in how you will be evaluated **and you are allowed to use LLM calls in llm programming mode**.
