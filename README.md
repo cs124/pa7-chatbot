@@ -217,7 +217,7 @@ The starter code also provides a list with 9125 movie titles and their associate
 As in previous homeworks, you can inspect the data to have an idea of the variations in how the titles are represented in this dataset. Note that the second element in the list/array is a string with movie genres separated by the pipe symbol |.
 
 ## Your sentiment lexicon
-The starter code also provides a sentiment lexicon that you can use to extract sentiment from the input. It consists of 3624 words with their associated sentiment extracted from [Harvard Inquirer](http://www.wjh.harvard.edu/~inquirer/spreadsheet_guide.htm) (Stone et al. 1966). The lexicon is stored for your convenience in a dictionary/hash map, where the word is the key and the sentiment the value.
+The starter code also provides a sentiment lexicon that you can use to extract sentiment from the input. It consists of 3624 words with their associated sentiment extracted from [Harvard Inquirer](https://inquirer.sites.fas.harvard.edu/spreadsheet_guide.htm) (Stone et al. 1966). The lexicon is stored for your convenience in a dictionary/hash map, where the word is the key and the sentiment the value.  You'll find the lexicon in the `/data` folder.
 
 ## Sanity check
 We have provided a sanity check script to test your code on basic inputs. To run the starter mode sanity checks, run `python3 testing/sanitycheck.py`
