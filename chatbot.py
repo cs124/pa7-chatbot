@@ -189,9 +189,8 @@ class Chatbot:
         :param preprocessed_input: a user-supplied line of text that has been
         pre-processed with preprocess()
 
-        :returns: a list of 6 integers, each representing the presence of an
-        emotion in the text. 1 indicates the presence of the emotion, 0 indicates
-        the absence of the emotion.
+        :returns: a list of emotions in the text or an empty list if no emotions found.
+        Possible emotions are: "Anger", "Disgust", "Fear", "Happiness", "Sadness", "Surprise"
         """
         return []
 
