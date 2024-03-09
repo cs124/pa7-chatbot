@@ -108,7 +108,7 @@ In the testing/test_scripts/ folder, you will find some testing scripts. To run 
     
 As you can see, each line of `simple.txt` is entered consecutively into the chatbot. However, the script terminates once it hits `:quit` and any lines afterwards will not be executed.
 
-This will useful when you want to test the same script multiple times. We will be testing your code with similar (but not the same) scripts as the ones provided in test_inputs.
+This will be useful when you want to test the same script multiple times. We will be testing your code with similar (but not the same) scripts as the ones provided in test_inputs.
 
 ## Customizing your chatbot
 All the code that you will need to write for this assignment will be in `chatbot.py`. Open that file and follow the instructions there to change the name of the chatbot, the greeting message, and the goodbye message. You can change your chatbot’s name now!
