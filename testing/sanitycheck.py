@@ -276,7 +276,7 @@ def test_extract_emotion():
     test_cases = [
         ('I am quite frustrated by these awful recommendations!!!', set(["anger"])),
         ('Great suggestion!  It put me in a great mood!', set(['happiness'])),
-        ('Digusting!!!', set(["disgust"])),
+        ('Disgusting!!!', set(["disgust"])),
         ('Woah!!  That movie was so shockingly bad!  You had better stop making awful recommendations they\'re pissing me off.', set(["anger", "surprise"])),
         ('What movie would you suggest I watch next?', set([])),
         ('What\'s the weather?', set([])),
