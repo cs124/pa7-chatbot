@@ -67,7 +67,7 @@ err() {
 main() {
     echo "Generating transcripts for chatbot..."
 
-    local -r TRANSCRIPTS_DIR="outputs-for-scripts"
+    local TRANSCRIPTS_DIR="outputs-for-scripts"
     mkdir -p "${TRANSCRIPTS_DIR}/standard"
     mkdir -p "${TRANSCRIPTS_DIR}/llm_prompting"
     mkdir -p "${TRANSCRIPTS_DIR}/llm_programming"
