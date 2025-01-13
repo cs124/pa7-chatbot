@@ -63,6 +63,9 @@ This is a big file! Here are the main sections:
 **Submitting**
 - [Submitting Your Solution](#submitting-your-solution) As always, submit **early AND often!!**
 
+**Handy Links**
+- You can find links to [all relevant resources](#links-to-resources) here so that you don't miss anything!
+
 ## A little bit of background
 In the early 1960s, the well-known early artificial intelligence (AI) program ELIZA made a big impact after showing its ability to process input and produce output expressed in natural language. [ELIZA](https://en.wikipedia.org/wiki/ELIZA) was one of the first conversational agents in AI, designed to simulate intelligent conversations, also known as chatbots. Developed by [Joseph Weizenbaum](https://en.wikipedia.org/wiki/Joseph_Weizenbaum) at MIT, ELIZA had several modules to interact in English, German, and Welsh, and different modes of operation. The most famous was a module that simulated the interaction with a [Rogerian psychotherapist](https://en.wikipedia.org/wiki/Person-centered_therapy). A typical conversation with ELIZA (all caps) was as follows:
 
@@ -106,6 +109,8 @@ In the testing/test_scripts/ folder, you will find some testing scripts. To run 
 
     python3 repl.py < testing/test_scripts/simple.txt
     
+*[For Windows users: If you are running the above in PowerShell and see an error, try running in cmd instead!]*
+
 As you can see, each line of `simple.txt` is entered consecutively into the chatbot. However, the script terminates once it hits `:quit` and any lines afterwards will not be executed.
 
 This will be useful when you want to test the same script multiple times. We will be testing your code with similar (but not the same) scripts as the ones provided in test_inputs.
@@ -184,7 +189,7 @@ We've decomposed some of the core logic for you. You will need to implement the 
 `recommend(user_ratings, ratings, k)`: This function should:
 - Input the **provided vector of the user's preferences** and a **pre-processed matrix of ratings by other users** (See the following section for details on pre-processing)
 - Use collaborative filtering to **compute and return** a list of the **k movie indices** with the highest recommendation score that the user hasn't seen. 
-- For starter mode, you will implement and use item-item collaborative filtering, with **cosine similarity** and **NO rating normalization**.
+- For starter mode, you will implement and use item-item collaborative filtering, with **cosine similarity** and **NO rating normalization**. For the neighbor selection step, you can assume that all items rated by the user are used as neighbors (the final prediction is a weighted average of ratings on all interacted items).
 
 `binarize(ratings, threshold)`: Binarizes the ratings matrix (for more details, see the [movie database section](#your-movie-database-movielens)). This function should:
 - Replace all entries **above the threshold** with **1**
@@ -225,6 +230,9 @@ We have provided a sanity check script to test your code on basic inputs. To run
 As mentioned before, you can run individual test scripts located in the testing/test_scripts/ directory with the following command:
 
     python3 repl.py < testing/test_scripts/simple.txt
+
+*[For Windows users: If you are running the above in PowerShell and see an error, try running in cmd instead!]*
+
 You can also run all the scripts with the following commands:
 
     sh testing/run_all_scripts.sh
@@ -244,7 +252,7 @@ and type
 to disable it.
 
 # Important Notes and Tips
-To ensure your recommend function's output matches the autograder's, make sure to implement collaborative filtering as described in the comments! As a reminder: item-item collaborative filtering, cosine similarity, and no rating normalization.
+To ensure your recommend function's output matches the autograder's, make sure to implement collaborative filtering as described in the comments! As a reminder: item-item collaborative filtering, cosine similarity, no rating normalization, and all rated items used as neighbors.
 
 We encourage you to use numpy for this assignment. [np.dot](https://docs.scipy.org/doc/numpy/reference/generated/numpy.dot.html), [np.linalg.norm](https://docs.scipy.org/doc/numpy/reference/generated/numpy.linalg.norm.html), and [np.where](https://docs.scipy.org/doc/numpy/reference/generated/numpy.where.html) may be especially helpful.
 
@@ -462,3 +470,10 @@ In the spirit of using LLMs for programming we are using LLM grading on this ass
 We want to be completely transparent about our LLM grading!  Check out the prompts we are using [here](https://docs.google.com/document/d/1zd6-uFXYLGCcycuLnjSHAgo8dGhzn0QrY-GaqQhlBoM/edit?usp=sharing).  We don't directly release the test cases, but note that they aren't very different from the provided examples in the rubric.
 
 The python autograder will test and grade each function in the [rubric](https://docs.google.com/spreadsheets/d/1MXqnPk60nwNWoNQQcLK2rTWIolZsi8u8pmQx31ewh8Y/edit?usp=sharing) except process. Process will first be graded by an LLM (Mixtral 8x7B to be precise!)  If the LLM takes off *any* points it will go to our CAs for manual review.
+
+## Links to resources
+
+1. The rubrics: https://docs.google.com/spreadsheets/d/1MXqnPk60nwNWoNQQcLK2rTWIolZsi8u8pmQx31ewh8Y/edit?gid=0#gid=0
+3. How the autograder works: https://docs.google.com/document/d/1zd6-uFXYLGCcycuLnjSHAgo8dGhzn0QrY-GaqQhlBoM/edit?tab=t.0#heading=h.1u11kgmpd31c
+4. Together.ai instructions: https://docs.google.com/document/d/1N5chC5b15ls-XXcpfjhSx71854fmvb_4DGD4qxkT0LU/edit?tab=t.0#heading=h.8gro9lzdzqpo
+5. FAQs: coming soon.
