@@ -324,7 +324,11 @@ JSON stands for JavaScript Object Notation and is a structured data format.  Her
 
 Similar to python dictionaries, JSON organized data with key, value pairs.  We can force our language models to respond in JSON only.
 
-We provide an example of how to do this in `json_llm_example.py`
+We provide an example of how to do this in `examples/json_llm_example.py`. To run the example, copy the file to the root directory and run in the root directory the following command:
+
+```
+python3 json_llm_example.py
+```
 
 Here is a simplified example (see the code for the full example):
 
@@ -367,7 +371,13 @@ The advantage of JSON mode is how simple it is to get structured LLM output!  Th
 
 An approach that will get you fast responses from an LLM, but with slightly less control is specifying detailed instructions in the system prompt.
 
-We provide an example of this in `simple_llm_example.py`
+We provide an example of how to do this in `examples/simple_llm_example.py`. To run the example, copy the file to the root directory and run in the root directory the following command:
+
+```
+python3 simple_llm_example.py
+```
+
+Example usage:
 
 ```python
 def flip_sentiment(sentence: str):
