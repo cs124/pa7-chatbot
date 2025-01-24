@@ -462,7 +462,7 @@ Submit your assignment via Gradescope (www.gradescope.com). We expect the follow
     rubric.txt
 If you add any additional files, create a deps/ folder and put your additional files in this folder. The autograder might not work if you format your files incorrectly.
 
-We will use your API key to run the autograder on your submission alone.  If you would like to work out an alternative accomodation please make a private Ed post.
+**We will use your API key to run the autograder on your submission alone. It is important that you make sure there is at least $1 left in your account.**  If you would like to work out an alternative accomodation please make a private Ed post.
 
 To create a .zip file for submission:
 
