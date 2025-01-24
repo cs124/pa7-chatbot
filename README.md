@@ -479,7 +479,7 @@ In the spirit of using LLMs for programming we are using LLM grading on this ass
 
 We want to be completely transparent about our LLM grading!  Check out the prompts we are using [here](https://docs.google.com/document/d/1zd6-uFXYLGCcycuLnjSHAgo8dGhzn0QrY-GaqQhlBoM/edit?usp=sharing).  We don't directly release the test cases, but note that they aren't very different from the provided examples in the rubric.
 
-The python autograder will test and grade each function in the [rubric](https://docs.google.com/spreadsheets/d/1MXqnPk60nwNWoNQQcLK2rTWIolZsi8u8pmQx31ewh8Y/edit?usp=sharing) except process. Process will first be graded by an LLM (Mixtral 8x7B to be precise!)  If the LLM takes off *any* points it will go to our CAs for manual review.
+The python autograder will test and grade each function in the [rubric](https://docs.google.com/spreadsheets/d/1MXqnPk60nwNWoNQQcLK2rTWIolZsi8u8pmQx31ewh8Y/edit?usp=sharing) except process. Process will first be graded by an LLM (Mixtral 8x7B to be precise!)  If the LLM takes off *any* points it will go to our CAs for manual review. **Note that you can see the scores for parts graded by the python autograder (which is deterministic) when you submit, but the parts graded by LLM+human will be hidden. This is to avoid exploitation of LLM grader. For the parts marked as "LLM graded" in the rubric, just make sure you adhere to the requirement, and we'll make sure you get the fair grade!**
 
 ## Links to resources
 
