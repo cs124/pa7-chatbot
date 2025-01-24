@@ -322,7 +322,7 @@ JSON stands for JavaScript Object Notation and is a structured data format.  Her
 
     {"name": "Moviebot", "purpose": "Recommendations", "MovieCount": 5, "StarterMode": True}
 
-Similar to python dictionaries, JSON organized data with key, value pairs.  We can force our language models to respond in JSON only.
+Similar to python dictionaries, JSON organized data with key, value pairs.  We can force our language models to respond in JSON only. Since together.ai currently only supports JSON mode stably on the Meta-Llama model, we'll be calling Llama when we want to use JSON mode. But you don't need to worry about changing model, because we've already implemented it for you in the `json_llm_call()` function in `util.py`.
 
 We provide an example of how to do this in `examples/json_llm_example.py`. To run the example, copy the file to the root directory and run in the root directory the following command:
 
