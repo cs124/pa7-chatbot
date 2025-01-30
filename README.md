@@ -8,11 +8,11 @@ In this assignment you will build a chatbot somewhat like the chatbot ELIZA that
 
 To get you started, we will guide you in the implementation of a chatbot that can recommend movies to the user – this will be referred to as the **starter** mode. After you have implemented the movie-recommender chatbot, we will try to replicate the bot you wrote by prompting a Large Language Model (LLM) by running your bot in **llm prompting** mode.  Finally you will switch to an **llm programming** mode which allows you to use both your own code and LLM calls to implement an interesting extension of the movie recommender. Be creative, and have fun!
 
-PA7 has 4 Submission Components on Gradescope.  Make sure you complete them all!
- - PA7 Group Work Form (5 Points)
+PA7 has 3 Submission Components on Gradescope.  Make sure you complete them all!
+
  - PA7 Coding (85 Points)
  - PA7 User Testing (5 Points)
- - PA7 Reflection (5 points)
+ - PA7 Reflection + Ethics Questions (10 points)
 
  ## Important Setup Note
 
@@ -487,3 +487,5 @@ The python autograder will test and grade each function in the [rubric](https://
 3. How the autograder works: https://docs.google.com/document/d/1zd6-uFXYLGCcycuLnjSHAgo8dGhzn0QrY-GaqQhlBoM/edit?tab=t.0#heading=h.1u11kgmpd31c
 4. Together.ai instructions: https://docs.google.com/document/d/1N5chC5b15ls-XXcpfjhSx71854fmvb_4DGD4qxkT0LU/edit?tab=t.0#heading=h.8gro9lzdzqpo
 5. FAQs: coming soon.
+6. User Testing questions (for your convenience, actual submission on Gradescope): https://docs.google.com/document/d/1liX4MC5qfBceQB0oCPICgxnRmoH0RKfdq5jmwsp7wRw/edit?tab=t.0
+7. Reflection + Ethics questions (for your convenience, actual submission on Gradescope): https://docs.google.com/document/d/1gDKuWzuI3f6Nmue60UqoESsrWIzRK62GmdKRh1_y_DM/edit?tab=t.0#heading=h.90ic4jpslfqf
