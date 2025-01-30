@@ -256,6 +256,8 @@ To ensure your recommend function's output matches the autograder's, make sure t
 
 We encourage you to use numpy for this assignment. [np.dot](https://docs.scipy.org/doc/numpy/reference/generated/numpy.dot.html), [np.linalg.norm](https://docs.scipy.org/doc/numpy/reference/generated/numpy.linalg.norm.html), and [np.where](https://docs.scipy.org/doc/numpy/reference/generated/numpy.where.html) may be especially helpful.
 
+If you encounter any issue, we strongly encourage you to read the [FAQs](https://docs.google.com/document/d/1y4iy7pcS3S4K9ChBSQ21Tjj-HyEKmvn7bytM-RTMwoI/edit?usp=sharing) doc first, because it may give you answer faster than the CAs!
+
 # Connecting to Together API
 
 For LLM Prompting Mode and LLM Programming Mode we need external LLM API access.  Together AI has graciously granted us free credits to use for this assignment.  We provide a brief guide on getting an API key and linking it this assignment [here](https://docs.google.com/document/d/1N5chC5b15ls-XXcpfjhSx71854fmvb_4DGD4qxkT0LU/edit?usp=sharing).
@@ -483,9 +485,9 @@ The python autograder will test and grade each function in the [rubric](https://
 
 ## Links to resources
 
-1. The rubrics: [https://docs.google.com/spreadsheets/d/1MXqnPk60nwNWoNQQcLK2rTWIolZsi8u8pmQx31ewh8Y/edit?gid=0#gid=0](https://docs.google.com/spreadsheets/d/1MXqnPk60nwNWoNQQcLK2rTWIolZsi8u8pmQx31ewh8Y/edit?usp=sharing)
-3. How the autograder works: [https://docs.google.com/document/d/1zd6-uFXYLGCcycuLnjSHAgo8dGhzn0QrY-GaqQhlBoM/edit?tab=t.0#heading=h.1u11kgmpd31c](https://docs.google.com/document/d/1zd6-uFXYLGCcycuLnjSHAgo8dGhzn0QrY-GaqQhlBoM/edit?usp=sharing)
-4. Together.ai instructions: [https://docs.google.com/document/d/1N5chC5b15ls-XXcpfjhSx71854fmvb_4DGD4qxkT0LU/edit?tab=t.0#heading=h.8gro9lzdzqpo](https://docs.google.com/document/d/1N5chC5b15ls-XXcpfjhSx71854fmvb_4DGD4qxkT0LU/edit?usp=sharing)
-5. FAQs: coming soon.
-6. User Testing questions (for your convenience, actual submission on Gradescope): [https://docs.google.com/document/d/1liX4MC5qfBceQB0oCPICgxnRmoH0RKfdq5jmwsp7wRw/edit?tab=t.0](https://docs.google.com/document/d/1liX4MC5qfBceQB0oCPICgxnRmoH0RKfdq5jmwsp7wRw/edit?usp=sharing)
-7. Reflection + Ethics questions (for your convenience, actual submission on Gradescope): [https://docs.google.com/document/d/1gDKuWzuI3f6Nmue60UqoESsrWIzRK62GmdKRh1_y_DM/edit?tab=t.0#heading=h.90ic4jpslfqf](https://docs.google.com/document/d/1gDKuWzuI3f6Nmue60UqoESsrWIzRK62GmdKRh1_y_DM/edit?usp=sharing)
+1. The rubrics: https://docs.google.com/spreadsheets/d/1MXqnPk60nwNWoNQQcLK2rTWIolZsi8u8pmQx31ewh8Y/edit?usp=sharing
+3. How the autograder works: https://docs.google.com/document/d/1zd6-uFXYLGCcycuLnjSHAgo8dGhzn0QrY-GaqQhlBoM/edit?usp=sharing
+4. Together.ai instructions: https://docs.google.com/document/d/1N5chC5b15ls-XXcpfjhSx71854fmvb_4DGD4qxkT0LU/edit?usp=sharing
+5. FAQs: https://docs.google.com/document/d/1y4iy7pcS3S4K9ChBSQ21Tjj-HyEKmvn7bytM-RTMwoI/edit?usp=sharing
+6. User Testing questions (for your convenience, actual submission on Gradescope): https://docs.google.com/document/d/1liX4MC5qfBceQB0oCPICgxnRmoH0RKfdq5jmwsp7wRw/edit?usp=sharing
+7. Reflection + Ethics questions (for your convenience, actual submission on Gradescope): https://docs.google.com/document/d/1gDKuWzuI3f6Nmue60UqoESsrWIzRK62GmdKRh1_y_DM/edit?usp=sharing
