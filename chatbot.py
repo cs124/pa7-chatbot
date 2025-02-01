@@ -3,6 +3,7 @@
 #
 # Original Python code by Ignacio Cases (@cases)
 # Update: 2024-01: Added the ability to run the chatbot as LLM interface (@mryan0)
+# Update: 2025-01 for Winter 2025 (Xuheng Cai)
 ######################################################################
 import util
 from pydantic import BaseModel, Field
@@ -69,25 +70,6 @@ class Chatbot:
         ########################################################################
         return goodbye_message
     
-    def llm_system_prompt(self):
-        """
-        Return the system prompt used to guide the LLM chatbot conversation.
-
-        NOTE: This is only for LLM Mode!  In LLM Programming mode you will define
-        the system prompt for each individual call to the LLM.
-        """
-        ########################################################################
-        # TODO: Write a system prompt message for the LLM chatbot              #
-        ########################################################################
-
-        system_prompt = """Your name is moviebot. You are a movie recommender chatbot. """ +\
-        """You can help users find movies they like and provide information about movies."""
-
-        ########################################################################
-        #                          END OF YOUR CODE                            #
-        ########################################################################
-
-        return system_prompt
 
     ############################################################################
     # 2. Modules 2 and 3: extraction and transformation                        #
@@ -158,41 +140,6 @@ class Chatbot:
         ########################################################################
 
         return text
-    
-    def extract_emotion(self, preprocessed_input):
-        """LLM PROGRAMMING MODE: Extract an emotion from a line of pre-processed text.
-        
-        Given an input text which has been pre-processed with preprocess(),
-        this method should return a list representing the emotion in the text.
-        
-        We use the following emotions for simplicity:
-        Anger, Disgust, Fear, Happiness, Sadness and Surprise
-        based on early emotion research from Paul Ekman.  Note that Ekman's
-        research was focused on facial expressions, but the simple emotion
-        categories are useful for our purposes.
-
-        Example Inputs:
-            Input: "Your recommendations are making me so frustrated!"
-            Output: ["Anger"]
-
-            Input: "Wow! That was not a recommendation I expected!"
-            Output: ["Surprise"]
-
-            Input: "Ugh that movie was so gruesome!  Stop making stupid recommendations!"
-            Output: ["Disgust", "Anger"]
-
-        Example Usage:
-            emotion = chatbot.extract_emotion(chatbot.preprocess(
-                "Your recommendations are making me so frustrated!"))
-            print(emotion) # prints ["Anger"]
-
-        :param preprocessed_input: a user-supplied line of text that has been
-        pre-processed with preprocess()
-
-        :returns: a list of emotions in the text or an empty list if no emotions found.
-        Possible emotions are: "Anger", "Disgust", "Fear", "Happiness", "Sadness", "Surprise"
-        """
-        return []
 
     def extract_titles(self, preprocessed_input):
         """Extract potential movie titles from a line of pre-processed text.
@@ -358,7 +305,70 @@ class Chatbot:
         return recommendations
 
     ############################################################################
-    # 4. Debug info                                                            #
+    # 4. PART 2: LLM Prompting Mode                                            #
+    ############################################################################
+
+    def llm_system_prompt(self):
+        """
+        Return the system prompt used to guide the LLM chatbot conversation.
+
+        NOTE: This is only for LLM Mode!  In LLM Programming mode you will define
+        the system prompt for each individual call to the LLM.
+        """
+        ########################################################################
+        # TODO: Write a system prompt message for the LLM chatbot              #
+        ########################################################################
+
+        system_prompt = """Your name is moviebot. You are a movie recommender chatbot. """ +\
+        """You can help users find movies they like and provide information about movies."""
+
+        ########################################################################
+        #                          END OF YOUR CODE                            #
+        ########################################################################
+
+        return system_prompt
+    
+    ############################################################################
+    # 5. PART 3: LLM Programming Mode (also need to modify functions above!)   #
+    ############################################################################
+
+    def extract_emotion(self, preprocessed_input):
+        """LLM PROGRAMMING MODE: Extract an emotion from a line of pre-processed text.
+        
+        Given an input text which has been pre-processed with preprocess(),
+        this method should return a list representing the emotion in the text.
+        
+        We use the following emotions for simplicity:
+        Anger, Disgust, Fear, Happiness, Sadness and Surprise
+        based on early emotion research from Paul Ekman.  Note that Ekman's
+        research was focused on facial expressions, but the simple emotion
+        categories are useful for our purposes.
+
+        Example Inputs:
+            Input: "Your recommendations are making me so frustrated!"
+            Output: ["Anger"]
+
+            Input: "Wow! That was not a recommendation I expected!"
+            Output: ["Surprise"]
+
+            Input: "Ugh that movie was so gruesome!  Stop making stupid recommendations!"
+            Output: ["Disgust", "Anger"]
+
+        Example Usage:
+            emotion = chatbot.extract_emotion(chatbot.preprocess(
+                "Your recommendations are making me so frustrated!"))
+            print(emotion) # prints ["Anger"]
+
+        :param preprocessed_input: a user-supplied line of text that has been
+        pre-processed with preprocess()
+
+        :returns: a list of emotions in the text or an empty list if no emotions found.
+        Possible emotions are: "Anger", "Disgust", "Fear", "Happiness", "Sadness", "Surprise"
+        """
+        return []
+
+    ############################################################################
+    # 6. Debug info                                                            #
     ############################################################################
 
     def debug(self, line):
@@ -372,7 +382,7 @@ class Chatbot:
         return debug_info
 
     ############################################################################
-    # 5. Write a description for your chatbot here!                            #
+    # 7. Write a description for your chatbot here!                            #
     ############################################################################
     def intro(self):
         """Return a string to use as your chatbot's description for the user.
