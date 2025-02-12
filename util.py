@@ -141,7 +141,7 @@ def simple_llm_call(system_prompt, message, model="mistralai/Mixtral-8x7B-Instru
 #   model: The model to use for the API call.
 #   max_tokens: The maximum number of tokens to generate in the response.
 # Returns the response from the API as a JSON object
-def json_llm_call(system_prompt, message, json_class, model="meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo", max_tokens=256):
+def json_llm_call(system_prompt, message, json_class, model="mistralai/Mixtral-8x7B-Instruct-v0.1", max_tokens=256):
     client = load_together_client()
     chat_completion = client.chat.completions.create(
         messages=[{
