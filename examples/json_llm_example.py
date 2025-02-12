@@ -31,10 +31,13 @@ if __name__ == '__main__':
 
     print()
     print("Sentence: " + args().sentence)   
-    print("ContainsFruit: " + str(extracted_food['ContainsFruit']))
-    print("ContainsVegetable: " + str(extracted_food['ContainsVegetable']))
-    print("ContainsMeat: " + str(extracted_food['ContainsMeat']))
-    print("ContainsDairy: " + str(extracted_food['ContainsDairy']))
+    try:   
+        print("ContainsFruit: " + str(extracted_food['ContainsFruit']))
+        print("ContainsVegetable: " + str(extracted_food['ContainsVegetable']))
+        print("ContainsMeat: " + str(extracted_food['ContainsMeat']))
+        print("ContainsDairy: " + str(extracted_food['ContainsDairy']))
+    except:
+        print("WARNING: The LLM response does not align with the input schema. You may call the API again or handle the issue accordingly.")
 
     print()
     print(extracted_food)
