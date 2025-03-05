@@ -5,10 +5,12 @@
 # Update: 2024-01: Added the ability to run the chatbot as LLM interface (@mryan0)
 # Update: 2025-01 for Winter 2025 (Xuheng Cai)
 ######################################################################
+from porter_stemmer import PorterStemmer
 import util
 from pydantic import BaseModel, Field
 
 import numpy as np
+import re
 
 
 # noinspection PyMethodMayBeStatic
@@ -33,7 +35,7 @@ class Chatbot:
         ########################################################################
 
         # Binarize the movie ratings before storing the binarized matrix.
-        self.ratings = ratings
+        self.ratings = self.binarize(ratings)
         ########################################################################
         #                             END OF YOUR CODE                         #
         ########################################################################
@@ -163,7 +165,7 @@ class Chatbot:
         pre-processed with preprocess()
         :returns: list of movie titles that are potentially in the text
         """
-        return []
+        return re.findall(r'"(.*?)"', preprocessed_input)
 
     def find_movies_by_title(self, title):
         """ Given a movie title, return a list of indices of matching movies.
@@ -183,7 +185,51 @@ class Chatbot:
         :param title: a string containing a movie title
         :returns: a list of indices of matching movies
         """
-        return []
+        matching_indices = []
+        title = title.strip()
+        year_match = None
+        year_extract = re.search(r'\((\d{4})\)$', title)
+        if year_extract:
+            year_match = year_extract.group(1)
+            # Remove the year from the title for matching
+            title = title.rsplit('(', 1)[0].strip()
+
+        articles = ['The ', 'A ', 'An ']
+        original_title = title
+        real_article = ""
+        for article in articles:
+            if title.startswith(article):
+                title = title[len(article):].strip()
+                real_article += (", " + article)
+                break
+
+        
+
+        title_variations = [
+            original_title,
+            title,  # Stripped title 
+            (title + real_article).strip()
+        ]
+        print(year_match, title)
+        for i, movie in enumerate(self.titles):
+            movie_title = movie[0][:-7]
+            movie_year = movie[0][-5:-1]
+            
+            # print(movie_year[-6:])
+            # Check each title variation
+            for variation in title_variations:
+                # If year is specified, match both title and year
+                if year_match:
+                    if variation == movie_title and year_match == movie_year:
+                        matching_indices.append(i)
+                        break
+                # If no year specified, match just the title
+                else:
+                    if variation == movie_title:
+                        matching_indices.append(i)
+                        break
+
+        return matching_indices
 
     def extract_sentiment(self, preprocessed_input):
         """Extract a sentiment rating from a line of pre-processed text.
@@ -201,7 +247,48 @@ class Chatbot:
         pre-processed with preprocess()
         :returns: a numerical value for the sentiment of the text
         """
-        return 0
+        stemmer = PorterStemmer()
+        words = preprocessed_input.lower().split()  # Tokenize and normalize
+        negation_words = {'not', 'no', 'never', 'neither', 'nor', "didn't", "wouldn't"}
+    
+        # Sentiment calculation
+        sentiment_score = 0
+        negation_active = False
+        in_quotes = False
+        
+        # Iterate through preprocessed words
+        for word in words:
+            if word.startswith('"') or word.endswith('"'):
+                in_quotes = not in_quotes
+                continue
+            
+            # Skip words inside quotes
+            if in_quotes:
+                continue
+
+            # Check for negation
+            if word in negation_words:
+                negation_active = not negation_active
+                continue
+            word = stemmer.stem(word)
+            if word not in self.sentiment: continue
+            # Check positive lexicon
+            if self.sentiment[word] == "pos":
+                # Flip sentiment if negation is active
+                sentiment_score += (-1 if negation_active else 1)
+            
+            # Check negative lexicon
+            else:
+                # Flip sentiment if negation is active
+                sentiment_score += (1 if negation_active else -1)
+        
+        # Determine final sentiment
+        if sentiment_score > 0:
+            return 1
+        elif sentiment_score < 0:
+            return -1
+        else:
+            return 0
 
     ############################################################################
     # 3. Movie Recommendation helper functions                                 #
@@ -234,8 +321,9 @@ class Chatbot:
 
         # The starter code returns a new matrix shaped like ratings but full of
         # zeros.
-        binarized_ratings = np.zeros_like(ratings)
-
+        binarized_ratings = np.zeros_like(ratings)  
+        binarized_ratings[ratings > threshold] = 1  
+        binarized_ratings[(ratings <= threshold) & (ratings > 0)] = -1
         ########################################################################
         #                        END OF YOUR CODE                              #
         ########################################################################
@@ -254,11 +342,30 @@ class Chatbot:
         ########################################################################
         # TODO: Compute cosine similarity between the two vectors.             #
         ########################################################################
-        similarity = 0
+        if np.all(u == 0) or np.all(v == 0):
+            return 0
+    
+        # Compute cosine similarity
+        # Use masked arrays to only compare rated items
+        mask = (u != 0) & (v != 0)
+        
+        # If no common ratings, return 0
+        if not np.any(mask):
+            return 0
+        
+        # Compute similarity only on common ratings
+        u_masked = u[mask]
+        v_masked = v[mask]
+        
+        # Compute cosine similarity
+        numerator = np.dot(u_masked, v_masked)
+        denominator = np.linalg.norm(u_masked) * np.linalg.norm(v_masked)
+        
+        return numerator / denominator if denominator != 0 else 0
         ########################################################################
         #                          END OF YOUR CODE                            #
         ########################################################################
-        return similarity
+        # return similarity
 
     def recommend(self, user_ratings, ratings_matrix, k=10, llm_enabled=False):
         """Generate a list of indices of movies to recommend using collaborative
@@ -297,12 +404,26 @@ class Chatbot:
         ########################################################################
 
         # Populate this list with k movie indices to recommend to the user.
-        recommendations = []
+        # similarity_matrix = self.similarity(ratings_matrix, ratings_matrix)
+
+        # # Compute predicted scores for each movie as the weighted sum of similar movies
+        # # user_ratings is a 1D array, we perform a dot product with similarity_matrix
+        # predicted_scores = similarity_matrix @ user_ratings.reshape(-1, 1)
+        # predicted_scores = predicted_scores.flatten()  # Convert back to 1D array
+
+        # # Exclude movies the user has already rated (nonzero values in user_ratings)
+        # predicted_scores[user_ratings != 0] = -np.inf  # Set rated movies to -inf so they won't be recommended
+
+        # # Get the top-k movie indices with the highest predicted scores
+        # recommended_indices = np.argsort(predicted_scores)[-k:][::-1]  # Sort descending and get top k
+
+        # return recommended_indices.tolist()
+        return []
 
         ########################################################################
         #                        END OF YOUR CODE                              #
         ########################################################################
-        return recommendations
+        # return recommendations
 
     ############################################################################
     # 4. PART 2: LLM Prompting Mode                                            #

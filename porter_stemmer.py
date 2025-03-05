@@ -205,8 +205,8 @@ class PorterStemmer:
 
     def step1c(self):
         """step1c() turns terminal y to i when there is another vowel in the stem."""
-        if (self.ends("y") and self.vowelinstem()):
-            self.b = self.b[:self.k] + 'i' + self.b[self.k + 1:]
+        if self.ends("y") and self.j > 0 and self.cons(self.k - 1): 
+            self.b = self.b[:self.k] + 'i' + self.b[self.k+1:] 
 
     def step2(self):
         """step2() maps double suffices to single ones.
