@@ -493,3 +493,4 @@ The python autograder will test and grade each function in the [rubric](https://
 5. FAQs: https://docs.google.com/document/d/1y4iy7pcS3S4K9ChBSQ21Tjj-HyEKmvn7bytM-RTMwoI/edit?usp=sharing
 6. User Testing questions (for your convenience, actual submission on Gradescope): https://docs.google.com/document/d/1liX4MC5qfBceQB0oCPICgxnRmoH0RKfdq5jmwsp7wRw/edit?usp=sharing
 7. Reflection + Ethics questions (for your convenience, actual submission on Gradescope): https://docs.google.com/document/d/1gDKuWzuI3f6Nmue60UqoESsrWIzRK62GmdKRh1_y_DM/edit?usp=sharing
+8. GitHub Jargon Handbook: https://docs.google.com/document/d/1iydelsyAJvKXhxFVoc7sMinqlYZDCm_xcOfe-s4wEYc/edit?usp=sharing
