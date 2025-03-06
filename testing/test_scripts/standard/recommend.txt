@@ -6,5 +6,6 @@ I liked "Easy A"
 yes
 yeah!
 yes
+yes
 no
 :quit
